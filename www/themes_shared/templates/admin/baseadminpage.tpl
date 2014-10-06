@@ -54,10 +54,10 @@
 			<div style="clear: both;">&nbsp;</div>
 		</div>
 		<!-- end #page -->
-		<script src="//code.jquery.com/jquery-1.9.1.js"></script>
+		<script src="//code.jquery.com/jquery-1.11.1.js"></script>
 		{literal}
 			<script>
-				window.jQuery || document.write('<script src="{/literal}{$smarty.const.WWW_TOP}{literal}/../themes_shared/scripts/jquery-1.9.1.js"><\/script>')
+				window.jQuery || document.write('<script src="{/literal}{$smarty.const.WWW_TOP}{literal}/../themes_shared/scripts/jquery-1.11.1.js"><\/script>')
 			</script>
 		{/literal}
 		{*<script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.min.js"></script>
