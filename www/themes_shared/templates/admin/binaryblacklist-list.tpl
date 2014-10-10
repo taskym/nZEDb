@@ -4,33 +4,149 @@
 	<br>CLICK EDIT OR ON THE BLACKLIST TO ENABLE/DISABLE.
 </p>
 <div id="message"></div>
-<table style="margin-top:10px;" class="data Sortable highlight">
-	<tr>
-		<th style="width:20px;">id</th>
-		<th>group</th>
-		<th style="width:25px;">edit</th>
-		<th>description</th>
-		<th style="width:40px;">delete</th>
-		<th>type</th>
-		<th>field</th>
-		<th>status</th>
-		<th>regex</th>
-	</tr>
-	{foreach from=$binlist item=bin}
-		<tr id="row-{$bin.id}" class="{cycle values=",alt"}">
-			<td>{$bin.id}</td>
-			<td>{$bin.groupname|replace:"alt.binaries":"a.b"}</td>
-			<td title="Edit this blacklist"><a href="{$smarty.const.WWW_TOP}/binaryblacklist-edit.php?id={$bin.id}">Edit</a></td>
-			<td>{$bin.description|truncate:50:"...":true}</td>
-			<td title="Delete this blacklist"><a href="javascript:ajax_binaryblacklist_delete({$bin.id})" onclick="return confirm('Are you sure? This will delete the blacklist from this list.');" >Delete</a></td>
-			<td>{if $bin.optype==1}Black{else}White{/if}</td>
-			<td>{if $bin.msgcol==1}Subject{elseif $bin.msgcol==2}Poster{else}MessageID{/if}</td>
-			{if $bin.status==1}
-				<td style="color:#00CC66">Active</td>
-			{else}
-				<td style="color:#FF0000">Disabled</td>
-			{/if}
-			<td title="Edit this blacklist"><a href="{$smarty.const.WWW_TOP}/binaryblacklist-edit.php?id={$bin.id}">{$bin.regex|escape:html|truncate:50:"...":true}</a></td>
-		</tr>
-	{/foreach}
-</table>
+
+{literal}
+<script type="text/javascript">
+	$(document).ready(function () {
+		var source =
+		{
+			datatype: "json",
+			datafields: [
+				{ name: 'id', type: 'number' },
+				{ name: 'groupname', type: 'string' },
+				{ name: 'regex', type: 'string' },
+				{ name: 'msgcol', type: 'string' },
+				{ name: 'optype', type: 'number' },
+				{ name: 'status', type: 'number' },
+				{ name: 'description', type: 'string' }
+			],
+			url: 'ajax_binaryblacklist-list.php?action=list',
+			updaterow: function (rowid, rowdata, commit) {
+				commit(true);
+			}
+		};
+		$("#groupname").jqxInput({theme: theme, width: 300});
+		$("#regex").jqxInput({theme: theme, height: 150, width: 300});
+		$("#msgcol").jqxInput({theme: theme, width: 300});
+		$("#description").jqxInput({theme: theme, width: 300});
+		$("#optype").jqxInput({theme: theme});
+		$("#active0").jqxRadioButton({theme: theme});
+		$("#active1").jqxRadioButton({theme: theme});
+		var editrow = -1;
+		var dataAdapter = new $.jqx.dataAdapter(source);
+		$("#jqxgrid").jqxGrid(
+			{
+				width: '100%',
+				source: dataAdapter,
+				theme: theme,
+				columnsresize: true,
+				autoheight: true,
+				columns: [
+					{ text: 'ID', datafield: 'id', width: '120px' },
+					{ text: 'Group', datafield: 'groupname' },
+					{ text: 'Regex', datafield: 'regex' },
+					{ text: 'Message Field', datafield: 'msgcol', width: '120px' },
+					{ text: 'Type', datafield: 'optype', width: '120px'},
+					{ text: 'Description', datafield: 'description' },
+					{ text: 'Status', datafield: 'status', width: '120px' },
+					{ text: 'Actions', datafield: 'Edit', resizable: false, width: '120px', columntype: 'button', cellsrenderer: function () {
+						return "Edit";
+					}, buttonclick: function (row) {
+						editrow = row;
+						var offset = $("#jqxgrid").offset();
+						$("#popupWindow").jqxWindow({ position: { x: parseInt(offset.left) +
+							60, y: parseInt(offset.top) + 60 } });
+						var dataRecord = $("#jqxgrid").jqxGrid('getrowdata', editrow);
+						$("#binaryid").val(dataRecord.id);
+						$("#groupname").val(dataRecord.groupname);
+						$("#regex").val(dataRecord.regex);
+						$("#msgcol").val(dataRecord.msgcol);
+						$("#description").val(dataRecord.description);
+						$("#optype").val(dataRecord.optype);
+						if (dataRecord.status == 1) {
+						$("#active1").jqxRadioButton({ checked: true });
+						} else {
+						$("#active0").jqxRadioButton({ checked: true });
+						}
+
+
+						$("#popupWindow").jqxWindow('open');
+					}
+					}
+				]
+			});
+
+		$("#popupWindow").jqxWindow({
+			width: $("#contentPanel").width() - 200, isModal: true, autoOpen: false, cancelButton: $("#Cancel"), modalOpacity: 0.01
+		});
+		$("#popupWindow").on('open', function () {
+			$("#groupname").jqxInput('selectAll');
+		});
+
+		$("#Cancel").jqxButton({ theme: theme });
+		$("#Save").jqxButton({ theme: theme });
+		$("#Save").click(function () {
+			if (editrow >= 0) {
+				var active = 0;
+				if ($('#active1').jqxRadioButton('checked')) {
+				active = 1;
+				}
+				var row = { id: $("#binaryid").val(), groupname: $("#groupname").val(), regex: $("#regex").val(), msgcol: $("#msgcol").val(),
+					optype: $("#optype").val(), status: active, description: $("#description").val()
+				};
+				var rowID = $('#jqxgrid').jqxGrid('getrowid', editrow);
+				$('#jqxgrid').jqxGrid('updaterow', rowID, row);
+				$("#popupWindow").jqxWindow('hide');
+			}
+		});
+		$("#jqxgrid").jqxGrid('autoresizecolumns');
+	});
+</script>
+{/literal}
+<div id="jqxgrid"></div>
+        <div style="margin-top: 30px;">
+            <div id="cellbegineditevent"></div>
+            <div style="margin-top: 10px;" id="cellendeditevent"></div>
+       </div>
+       <div id="popupWindow">
+            <div>Edit</div>
+            <div style="overflow: hidden;">
+                <table>
+                    <tr>
+                        <input type="hidden" id="binaryid" />
+                        <td align="right">Group:</td>
+                        <td align="left"><input id="groupname" /></td>
+						<div class="hint">The full name of a valid newsgroup. (Wildcard in the format 'alt.binaries.*')</div>
+					</tr>
+                    <tr>
+                        <td align="right">Regex:</td>
+                        <td align="left"><textarea id="regex"></textarea></td>
+                    </tr>
+					<tr>
+						<td align="right">Description:</td>
+						<td align="left"><input id="description"></td>
+					</tr>
+                    <tr>
+                        <td align="right">Message Field:</td>
+                        <td align="left"><input id="msgcol"></td>
+                    </tr>
+					<tr>
+                        <td align="right">Type:</td>
+                        <td align="left"><input id="optype"></td>
+                    </tr>
+					<tr>
+						<td align="right">Active:</td>
+						<td align="left">
+							<div id="active1">Yes</div>
+							<div id="active0">No</div>
+						</td>
+					</tr>
+                    <tr>
+                        <td align="right"></td>
+                        <td style="padding-top: 10px;" align="right">
+						<input style="margin-right: 5px;" type="button" id="Save" value="Save" />
+						<input id="Cancel" type="button" value="Cancel" /></td>
+                    </tr>
+                </table>
+            </div>
+       </div>

@@ -1,19 +1,21 @@
-<div class="jqx-widget-header-black"
-	style="white-space: nowrap; padding: 3px; height: 20px; border: none;text-align:center;font-size:14px">
-	Admin Functions
-</div>
 <div style="border: none;" id="adminTree">
 	<ul>
-		<li id="Home"><span item-title="true">Home</span></li>
-		<li id="Admin Home"><span item-title="true">Admin Home</span></li>
-		<li id="Site Settings" item-expanded="true"><span item-title="true">Site Settings</span>
+		<li>Home</li>
+		<li>Admin Home</li>
+		<li>Site Settings
 			<ul>
-				<li id="Blacklist" item-expanded="true"><span item-title="true">Blacklist</span>
+				<li>Blacklist
 					<ul>
-						<li>Add</li>
-						<li>View</li>
+						<li><a href="{$smarty.const.WWW_TOP}/binaryblacklist-list.php?action=list">Add/View</a></li>
 					</ul>
 				</li>
+				<li>Content Page
+					<ul>
+						<li><a href-"{$smarty.const.WWW_TOP}/content-list.php">Add/View</a></li>
+					</ul>
+				</li>
+				<li><a href="{$smarty.const.WWW_TOP}/category-list.php?action=add">Edit Categories</li>
+				<li><a href="{$smarty.const.WWW_TOP}/site-edit.php">Edit Site</a></li>
 			</ul>
 		</li>
 	</ul>

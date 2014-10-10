@@ -8,47 +8,24 @@
 		<meta name="description" content="{$page->meta_description}{if $site->metadescription != ""} - {$site->metadescription}{/if}">
 		<meta name="application-name" content="nZEDb-v{$site->version}">
 		<meta name="viewport" content="width=device-width">
-		<link rel="stylesheet" href="{$smarty.const.WWW_TOP}/../themes_shared/styles/admin.base.css" type="text/css" />
-		<link rel="stylesheet" href="{$smarty.const.WWW_TOP}/../themes_shared/styles/admin.black.css" type="text/css" />
 		<link rel="shortcut icon" href="{$smarty.const.WWW_TOP}/../themes_shared/images/favicon.ico">
-		<style type="text/css">.jqx-splitter { border: none; }</style>
-		<script type="text/javascript" src="{$smarty.const.WWW_TOP}/../themes_shared/scripts/jquery-1.11.1.js"></script>
+		<link rel="stylesheet" href="{$smarty.const.WWW_TOP}/../themes_shared/styles/layout/jqx.base.css" type="text/css" />
+		<script type="text/javascript" src="{$smarty.const.WWW_TOP}/../themes_shared/scripts/jquery-2.0.2.min.js"></script>
+		<script type="text/javascript" src="{$smarty.const.WWW_TOP}/../themes_shared/scripts/layout/themestyles.js"></script>
 		<script type="text/javascript" src="{$smarty.const.WWW_TOP}/../themes_shared/scripts/layout/jqxcore.js"></script>
-		<script type="text/javascript" src="{$smarty.const.WWW_TOP}/../themes_shared/scripts/layout/jqxbuttons.js"></script>
-		<script type="text/javascript" src="{$smarty.const.WWW_TOP}/../themes_shared/scripts/layout/jqxscrollbar.js"></script>
-		<script type="text/javascript" src="{$smarty.const.WWW_TOP}/../themes_shared/scripts/layout/jqxpanel.js"></script>
-		<script type="text/javascript" src="{$smarty.const.WWW_TOP}/../themes_shared/scripts/layout/jqxtree.js"></script>
-		<script type="text/javascript" src="{$smarty.const.WWW_TOP}/../themes_shared/scripts/layout/jqxexpander.js"></script>
-		<script type="text/javascript" src="{$smarty.const.WWW_TOP}/../themes_shared/scripts/layout/jqxsplitter.js"></script>
-		{literal}
-			<script type="text/javascript">
-				$(document).ready(function () {
-					var window_width = $(window).width() - 10;
-					var window_height = $(window).height() - 10;
-					$("#adminviewport").jqxSplitter({ theme: 'black', width: window_width, height: window_height, panels:
-						[
-							{ size: "10%", min: "5%"},
-							{ size: '90%', min: "40%"}
-						] });
-					$('#adminTree').jqxTree({ theme: 'black', height: '100%', width: '100%' });
-					$('#adminTree').on('select', function (event) {
-						console.log(event);
-						$('#contentPanel').html("<div style='margin: 10px;'>" +	event.args.element.id + "</div>");
-					});
-				});
-			</script>
-		{/literal}
+		<script type="text/javascript" src="{$smarty.const.WWW_TOP}/../themes_shared/scripts/layout/jqx-all.js"></script>
+		{literal}<style type="text/css">.jqx-splitter { border: none; } </style>{/literal}
 	{$page->head}
 	</head>
 
 	<body class="black">
 	<div id="content">
-
-	<div id="adminviewport">
+	<div id="adminsplit">
 		<div id="sidebar">
 			{$admin_menu}
 		</div>
-		<div style='margin: 10px;' id="contentPanel">{$page->content}</div>
+		<div style='margin: 10px;' id="contentPanel">{$page->content}
+		</div>
 	</div>
 	</div>
 		{if $site->google_analytics_acc != ''}
@@ -72,9 +49,28 @@
 		{literal}
 		<script type="text/javascript">
 			var WWW_TOP = "{$smarty.const.WWW_TOP}/..";
-			$('.top-nav').children().children('select').bind('change', function () {
-				$("html, body").animate({scrollTop: $('#' + $(this).val()).offset().top}, "slow");
+			$(document).ready(function () {
+				initthemes("/admin/../themes_shared/styles/layout/jqx.");
+				var window_width = $(window).width() - 10;
+				var window_height = $(window).height() - 10;
+				$("#adminsplit").jqxSplitter({ theme: theme, width: window_width, height: window_height, showSplitBar: false, panels:
+					[
+						{ size: "10%", min: "5%"},
+						{ size: '90%', min: "40%"}
+					] });
+				$('#adminTree').jqxTree({ theme: theme , height: '100%', width: '100%' });
+				$('.top-nav').children().children('select').bind('change', function () {
+					$("html, body").animate({scrollTop: $('#' + $(this).val()).offset().top}, "slow");
+				});
 			});
+			var adminheader = $('<div id="adminheader" class="jqx-widget-header-' + theme + '" style="white-space: nowrap; padding: 3px; height: 20px; border: none;text-align:center;font-size:14px">Theme</div>');
+			$('#adminTree').before(adminheader);
+			var source =
+				[
+				"Black", "Summer"
+				];
+			var themelist = $('<div id="themelist"></div>').jqxDropDownList({ source: source, selectedIndex: 0, height: '20px', theme: theme });
+			$('#adminTree').before(themelist);
 		</script>
 		{/literal}
 	</body>
