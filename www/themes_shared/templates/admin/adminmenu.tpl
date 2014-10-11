@@ -6,7 +6,7 @@
 			<ul>
 				<li>Blacklist
 					<ul>
-						<li><a href="{$smarty.const.WWW_TOP}/binaryblacklist-list.php?action=list">Add/View</a></li>
+						<li><a href="{$smarty.const.WWW_TOP}/binaryblacklist.php?action=list">Add/View</a></li>
 					</ul>
 				</li>
 				<li>Content Page

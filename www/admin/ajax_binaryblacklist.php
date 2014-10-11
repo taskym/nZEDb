@@ -10,11 +10,19 @@ if (isset($_GET['action'])) {
 			echo json_encode($bin->getBlacklist(false));
 			break;
 		case "delete":
-			$id = (int)$_GET['bin_id'];
+			$id = (int)$_GET['id'];
 			$bin->deleteBlacklist($id);
 			print "Blacklist $id deleted.";
 			break;
+		case "update":
+			$id = (int)$_GET['bin_id'];
+			$ret = $bin->updateBlacklist($_POST);
+			break;
+		case "add":
+			$id = $bin->addBlacklist($_POST);
+			print ($id);
+			break;
 		default:
-			return "error";
+			print "Error: No Command Given";
 	}
 }
