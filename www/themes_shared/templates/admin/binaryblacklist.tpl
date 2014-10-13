@@ -8,6 +8,7 @@
 {literal}
 <script type="text/javascript">
 	$(document).ready(function () {
+		var message = '<div align="center" class="jqx-widget-header-' + theme + '">';
 		var source =
 		{
 			datatype: "json",
@@ -22,29 +23,77 @@
 			],
 			url: 'ajax_binaryblacklist.php?action=list',
 			addrow: function (rowid, rowdata, position, commit) {
-				commit(true);
-			},
-			deleterow: function (rowid, commit) {
-				var data = "action=delete&id=" + rowid;
 				$.ajax({
 					dataType: 'json',
-					url: 'ajax_binaryblacklist.php',
-					data: data,
+					url: 'ajax_binaryblacklist.php?action=add&rowid=' + rowid,
+					data: rowdata,
+					type: 'post',
+					success: function (data, status, xhr) {
+							$("#message").html(message + 'Added Row: ' + data.id + '</div>');
+							commit(true);
+						 	$('#jqxgrid').jqxGrid('setcellvaluebyid', data.rowid, 'id', data.id);
+							$('#jqxgrid').jqxGrid('ensurerowvisible', data.rowid);
+
+					},
+					error: function (error, responseText, errorThrown) {
+						$("#message").html(message + 'Error: ' + responseText);
+							commit(false);
+					}
+				});
+			},
+			deleterow: function (rowid, commit) {
+				var dataRecord = $("#jqxgrid").jqxGrid('getrowdata', rowid);
+				var databaseid = dataRecord.id;
+				$.ajax({
+					dataType: 'json',
+					url: 'ajax_binaryblacklist.php?action=delete&id=' + databaseid,
 					success: function (data, status, xhr) {
 						commit(true);
+						$("#message").html(message + 'Deleted ID: ' + data.id + '</div>');
+
+					},
+					error: function (error, responseText, errorThrown) {
+						$("#message").html(message + 'Error: ' + responseText);
+							commit(false);
 					}
 				});
 			},
 			updaterow: function (rowid, rowdata, commit) {
-				var data = rowdata;
 				$.ajax({
 					dataType: 'json',
-					url: 'ajax_binaryblacklist.php?action=update&id=' + rowid,
-					data: data,
+					url: 'ajax_binaryblacklist.php?action=update',
+					data: rowdata,
+					type: 'post',
 					success: function (data, status, xhr) {
+						if(data) {
 						commit(true);
+						}
 					}
 				});
+			}
+		};
+		var optyperender = function (row, columnfield, value, defaulthtml, columnproperties) {
+			if (value == 2) {
+				return '<span style="margin: 4px; float: ' + columnproperties.cellsalign + ';">White</span>';
+			}
+			if (value == 1) {
+				return '<span style = "margin: 4px; float: ' + columnproperties.cellsalign + ';">Black</span>';
+			}
+		};
+		var statusrender = function (row, columnfield, value, defaulthtml, columnproperties) {
+			if (value == 1) {
+				return '<span style = "margin: 4px; float: ' + columnproperties.cellsalign + ';">Active</span>';
+			} else {
+				return '<span style = "margin: 4px; float: ' + columnproperties.cellsalign + ';">Disabled</span>';
+			}
+		};
+		var msgcolrender = function (row, columnfield, value, defaulthtml, columnproperties) {
+			if (value == 1) {
+				return '<span style = "margin: 4px; float: ' + columnproperties.cellsalign + ';">Subject</span>';
+			}else if (value == 2) {
+				return '<span style = "margin: 4px; float: ' + columnproperties.cellsalign + ';">Poster</span>';
+			} else {
+				return '<span style = "margin: 4px; float: ' + columnproperties.cellsalign + ';">MessageID</span>';
 			}
 		};
 		$("#groupname").jqxInput({theme: theme, width: 300});
@@ -77,26 +126,22 @@
 					$("#addrowbutton").jqxButton({theme:theme});
 					$("#deleterowbutton").jqxButton({theme:theme});
 					$("#addrowbutton").on('click', function (rowid) {
-						var commit = $("#jqxgrid").jqxGrid('addrow', rowid, {});
-
+						openEditWindow(rowid, 'new');
 					});
 					$("#deleterowbutton").on('click', function () {
 						var selectedrowindex = $("#jqxgrid").jqxGrid('getselectedrowindex');
-						var rowscount = $("#jqxgrid").jqxGrid('getdatainformation').rowscount;
-						if (selectedrowindex >= 0 && selectedrowindex < rowscount) {
 							var id = $("#jqxgrid").jqxGrid('getrowid', selectedrowindex);
 							var commit = $("#jqxgrid").jqxGrid('deleterow', id);
-						}
 					});
 				},
 				columns: [
 					{ text: 'ID', datafield: 'id', width: '120px' },
 					{ text: 'Group', datafield: 'groupname' },
 					{ text: 'Regex', datafield: 'regex' },
-					{ text: 'Message Field', datafield: 'msgcol', width: '120px' },
-					{ text: 'Type', datafield: 'optype', width: '120px'},
+					{ text: 'Message Field', datafield: 'msgcol', width: '120px', cellsrenderer: msgcolrender },
+					{ text: 'Type', datafield: 'optype', width: '120px', cellsrenderer: optyperender },
 					{ text: 'Description', datafield: 'description' },
-					{ text: 'Status', datafield: 'status', width: '120px' },
+					{ text: 'Status', datafield: 'status', width: '120px', cellsrenderer: statusrender },
 					{ text: 'Actions', datafield: 'Edit', resizable: false, width: '120px', columntype: 'button', cellsrenderer: function () {
 						return "Edit";
 					}, buttonclick: function (row) {
@@ -121,7 +166,7 @@
 		$("#Cancel").jqxButton({ theme: theme });
 		$("#Save").jqxButton({ theme: theme });
 		$("#Save").click(function () {
-			if (editrow >= 0) {
+				var binaryid = $('#binaryid').val();
 				var active = 0;
 				if ($('#active1').jqxRadioButton('checked')) {
 				active = 1;
@@ -141,13 +186,19 @@
 					optype: type, status: active, description: $("#description").val()
 				};
 				var rowID = $('#jqxgrid').jqxGrid('getrowid', editrow);
-				$('#message').html('<div align="center" class="jqx-widget-header-' + theme + '">Updated ID: ' + $("#binaryid").val() + '</div><br />');
-				$('#jqxgrid').jqxGrid('updaterow', rowID, row);
+				if (binaryid != "") {
+					$('#message').html('<div align="center" class="jqx-widget-header-' + theme + '">Updated ID: ' + $("#binaryid").val() + '</div><br />');
+					$('#jqxgrid').jqxGrid('updaterow', rowID, row);
+				}else{
+					$('#jqxgrid').jqxGrid('addrow', rowID, row);
+				}
 				$("#popupWindow").jqxWindow('hide');
-			}
 		});
 		$("#jqxgrid").jqxGrid('autoresizecolumns');
 		function openEditWindow(editrow, neworold){
+			$("#active1").jqxRadioButton({ checked: true });
+			$("#typeblack").jqxRadioButton({ checked: true });
+			$("#fieldsubject").jqxRadioButton({ checked: true });
 			if ( neworold == "old") {
 			var dataRecord = $("#jqxgrid").jqxGrid('getrowdata', editrow);
 			$("#binaryid").val(dataRecord.id);
@@ -166,11 +217,10 @@
 			}
 			if (dataRecord.msgcol == 1) {
 				$("#fieldsubject").jqxRadioButton({ checked: true });
-			} else
-				if (dataRecord.msgcol == 2) {
-					$("#fieldposter").jqxRadioButton({ checked: true });
-				} else {
-					$("#fieldmessageid").jqxRadioButton({ checked: true });
+			} else if (dataRecord.msgcol == 2) {
+				$("#fieldposter").jqxRadioButton({ checked: true });
+			} else {
+				$("#fieldmessageid").jqxRadioButton({ checked: true });
 				}
 			}
 			$("#popupWindow").jqxWindow('open');

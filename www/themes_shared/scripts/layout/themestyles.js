@@ -37,11 +37,9 @@ function initthemes(initialurl) {
     var me = this;
     this.$head = $('head');
     $('#themelist').jqxDropDownList({ source: themes, theme: theme, selectedIndex: 0, dropDownHeight: 200, width: '98%', height: '20px' });
-    var hasParam = window.location.toString().indexOf('?');
+    var hasParam = window.location.toString().indexOf('#css=');
     if (hasParam != -1) {
-        var themestart = window.location.toString().indexOf('(');
-        var themeend = window.location.toString().indexOf(')');
-        var theme = window.location.toString().substring(themestart + 1, themeend);
+        var theme = window.location.toString().substring(hasParam + 5);
         $.data(document.body, 'theme', theme);
         selectedTheme = theme;
         var themeIndex = 0;
@@ -57,6 +55,7 @@ function initthemes(initialurl) {
     }
     else {
         $.data(document.body, 'theme', 'arctic');
+        window.location = window.location.toString() + "#css=arctic";
     }
     $('#themelist').on('select', function (event) {
         setTimeout(function () {
@@ -111,12 +110,12 @@ function getTheme() {
     else {
         return theme;
     }
-    var themestart = window.location.toString().indexOf('css=');
+    var themestart = window.location.toString().indexOf('#css=');
     if (themestart == -1) {
         return '';
     }
 
-    var theme = window.location.toString().substring(4 + themestart);
+    var theme = window.location.toString().substring(5 + themestart);
     var url = "/admin/../themes_shared/styles/layout/jqx." + theme + '.css';
 
     if (document.createStyleSheet != undefined) {

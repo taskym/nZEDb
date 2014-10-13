@@ -31,12 +31,15 @@ class AdminPage extends BasePage
 	public function render()
 	{
 		$this->smarty->assign('page', $this);
-
+		if(preg_match('/index\.php/i', $_SERVER['SCRIPT_NAME'])) {
 		$admin_menu = $this->smarty->fetch('adminmenu.tpl');
 		$this->smarty->assign('admin_menu', $admin_menu);
-
+		$pagecontent = $this->smarty->fetch('pagecontent.tpl');
+		$this->smarty->assign('pagecontent', $pagecontent);
 		$this->page_template = 'baseadminpage.tpl';
-
+		}else{
+		$this->page_template = 'pagecontent.tpl';
+		}
 		parent::render();
 	}
 }

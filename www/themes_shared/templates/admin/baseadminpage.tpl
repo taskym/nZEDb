@@ -7,7 +7,7 @@
 		<meta name="keywords" content="{$page->meta_keywords}{if $site->metakeywords != ""},{$site->metakeywords}{/if}">
 		<meta name="description" content="{$page->meta_description}{if $site->metadescription != ""} - {$site->metadescription}{/if}">
 		<meta name="application-name" content="nZEDb-v{$site->version}">
-		<meta name="viewport" content="width=device-width">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<link rel="shortcut icon" href="{$smarty.const.WWW_TOP}/../themes_shared/images/favicon.ico">
 		<link rel="stylesheet" href="{$smarty.const.WWW_TOP}/../themes_shared/styles/layout/jqx.base.css" type="text/css" />
 		<script type="text/javascript" src="{$smarty.const.WWW_TOP}/../themes_shared/scripts/jquery-2.0.2.min.js"></script>
@@ -18,15 +18,14 @@
 	{$page->head}
 	</head>
 
-	<body class="black">
+	<body class="default">
 	<div id="content">
-	<div id="adminsplit">
-		<div id="sidebar">
-			{$admin_menu}
+		<div id="adminsplit">
+			<div id="sidebar">
+				{$admin_menu}
+			</div>
+			{$pagecontent}
 		</div>
-		<div style='margin: 10px;' id="contentPanel">{$page->content}
-		</div>
-	</div>
 	</div>
 		{if $site->google_analytics_acc != ''}
 			{literal}
@@ -65,12 +64,11 @@
 			});
 			var adminheader = $('<div id="adminheader" class="jqx-widget-header-' + theme + '" style="white-space: nowrap; padding: 3px; height: 20px; border: none;text-align:center;font-size:14px">Theme</div>');
 			$('#adminTree').before(adminheader);
-			var source =
-				[
-				"Black", "Summer"
-				];
-			var themelist = $('<div id="themelist"></div>').jqxDropDownList({ source: source, selectedIndex: 0, height: '20px', theme: theme });
+			var themelist = $('<div id="themelist"></div>').jqxDropDownList({ selectedIndex: 0, height: '20px', theme: theme });
 			$('#adminTree').before(themelist);
+		function loadcontent(url){
+		 $("#contentPanel").load(url);
+		}
 		</script>
 		{/literal}
 	</body>

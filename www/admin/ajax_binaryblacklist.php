@@ -12,15 +12,18 @@ if (isset($_GET['action'])) {
 		case "delete":
 			$id = (int)$_GET['id'];
 			$bin->deleteBlacklist($id);
-			print "Blacklist $id deleted.";
+			$returnData = json_encode(array("success" => true, "id" => $id));
+			print ($returnData);
 			break;
 		case "update":
-			$id = (int)$_GET['bin_id'];
+			$id = (int)$_GET['id'];
 			$ret = $bin->updateBlacklist($_POST);
 			break;
 		case "add":
 			$id = $bin->addBlacklist($_POST);
-			print ($id);
+			$gridRowID = $_GET['rowid'];
+			$returnData = json_encode(array("id" => $id, "rowid" => $gridRowID));
+			print ($returnData);
 			break;
 		default:
 			print "Error: No Command Given";
