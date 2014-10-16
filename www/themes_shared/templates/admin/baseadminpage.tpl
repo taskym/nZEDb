@@ -14,19 +14,26 @@
 		<script type="text/javascript" src="{$smarty.const.WWW_TOP}/../themes_shared/scripts/layout/themestyles.js"></script>
 		<script type="text/javascript" src="{$smarty.const.WWW_TOP}/../themes_shared/scripts/layout/jqxcore.js"></script>
 		<script type="text/javascript" src="{$smarty.const.WWW_TOP}/../themes_shared/scripts/layout/jqx-all.js"></script>
-		{literal}<style type="text/css">.jqx-splitter { border: none; } </style>{/literal}
+		{literal}
+			<style type="text/css">
+			html, body {
+					height: 100%;
+					width: 100%;
+					margin: 0px;
+					padding: 0px;
+				}
+			</style>
+		{/literal}
 	{$page->head}
 	</head>
 
 	<body class="default">
-	<div id="content">
-		<div id="adminsplit">
-			<div id="sidebar">
+		<div style="position: fixed; width: 100%; height: 30px;">
 				{$admin_menu}
-			</div>
-			{$pagecontent}
 		</div>
-	</div>
+			<div style='margin: 3px; width: 100%; height: 100%; padding-top: 30px;' id="contentPanel">
+			{$pagecontent}
+			</div>
 		{if $site->google_analytics_acc != ''}
 			{literal}
 				<script>
@@ -50,24 +57,19 @@
 			var WWW_TOP = "{$smarty.const.WWW_TOP}/..";
 			$(document).ready(function () {
 				initthemes("/admin/../themes_shared/styles/layout/jqx.");
-				var window_width = $(window).width() - 10;
-				var window_height = $(window).height() - 10;
-				$("#adminsplit").jqxSplitter({ theme: theme, width: window_width, height: window_height, showSplitBar: false, panels:
-					[
-						{ size: "10%", min: "5%"},
-						{ size: '90%', min: "40%"}
-					] });
-				$('#adminTree').jqxTree({ theme: theme , height: '100%', width: '100%' });
-				$('.top-nav').children().children('select').bind('change', function () {
+				$("#adminMenu").jqxMenu({ theme: theme, showTopLevelArrows: true, width: '100%', height: '30px'});
+                $("#adminMenu").css('visibility', 'visible');
+				$("#adminMenu").css('position', 'absolute');
+				$('.top-nav').on('select').bind('change', function () {
 					$("html, body").animate({scrollTop: $('#' + $(this).val()).offset().top}, "slow");
 				});
 			});
-			var adminheader = $('<div id="adminheader" class="jqx-widget-header-' + theme + '" style="white-space: nowrap; padding: 3px; height: 20px; border: none;text-align:center;font-size:14px">Theme</div>');
-			$('#adminTree').before(adminheader);
-			var themelist = $('<div id="themelist"></div>').jqxDropDownList({ selectedIndex: 0, height: '20px', theme: theme });
-			$('#adminTree').before(themelist);
+		/*
+		$('#themelist').jqxDropDownList({ selectedIndex: 0, width: 'auto', height: '30px', theme: theme });
+		 */
 		function loadcontent(url){
-		 $("#contentPanel").load(url);
+		$("#contentPanel").load(url);
+
 		}
 		</script>
 		{/literal}
