@@ -2,33 +2,33 @@
 	<ul>
 		<li>Home</li>
 		<li><a href="{$smarty.const.WWW_TOP}/">Admin Home</a></li>
-		<li>Site Settings
+		<li>Main Settings
 			<ul>
-				<li><a href="{$smarty.const.WWW_TOP}/binaryblacklist.php">Manage Blacklists</a></li>
-				<li><a href="{$smarty.const.WWW_TOP}/content-list.php">Manage Content Page</a></li>
-				<li><a href="{$smarty.const.WWW_TOP}/category-list.php?action=add">Manage Categories</li>
-				<li><a href="{$smarty.const.WWW_TOP}/site-edit.php">Edit Site</a></li>
-				<li><a href="{$smarty.const.WWW_TOP}/group-list.php">Manage Groups</a></li>
-				<li><a href="{$smarty.const.WWW_TOP}/menu-list.php">Manage Menu</a>
+				<li><a href="{$smarty.const.WWW_TOP}/binaryblacklist.php">Blacklists</a></li>
+				<li><a href="{$smarty.const.WWW_TOP}/content-list.php">Content Page(s)</a></li>
+				<li><a href="{$smarty.const.WWW_TOP}/category-list.php?action=add">Categories</li>
+				<li><a href="{$smarty.const.WWW_TOP}/site-edit.php">Site Settings</a></li>
+				<li><a href="{$smarty.const.WWW_TOP}/group-list.php">Groups</a></li>
+				<li><a href="{$smarty.const.WWW_TOP}/menu-list.php"> Menu</a>
 				<li><a href="{$smarty.const.WWW_TOP}/tmux-edit.php">Tmux Settings</a></li>
 			</ul>
 		</li>
 		<li>Release Lists
 			<ul>
-				<li><a href="{$smarty.const.WWW_TOP}/movie-list.php?action=list">Manage Movies</a></li>
-				<li><a href="{$smarty.const.WWW_TOP}/rage-list.php">Manage TV</a></li>
-				<li><a href="{$smarty.const.WWW_TOP}/anidb-list.php?action=add">Manage AniDB</li>
-				<li><a href="{$smarty.const.WWW_TOP}/console-list.php">Manage Consoles</a></li>
-				<li><a href="{$smarty.const.WWW_TOP}/game-list.php">Manage Games</a></li>
-				<li><a href="{$smarty.const.WWW_TOP}/music-list.php">Manage Music</a></li>
-				<li><a href="{$smarty.const.WWW_TOP}/xxx-list.php">Manage XXX</a></li>
-				<li><a href="{$smarty.const.WWW_TOP}/release-list.php?action=list">Manage Releases</a></li>
+				<li><a href="{$smarty.const.WWW_TOP}/movie-list.php?action=list">Movies</a></li>
+				<li><a href="{$smarty.const.WWW_TOP}/rage-list.php">TV</a></li>
+				<li><a href="{$smarty.const.WWW_TOP}/anidb-list.php?action=add">AniDB</li>
+				<li><a href="{$smarty.const.WWW_TOP}/console-list.php">Consoles</a></li>
+				<li><a href="{$smarty.const.WWW_TOP}/game-list.php">Games</a></li>
+				<li><a href="{$smarty.const.WWW_TOP}/music-list.php">Music</a></li>
+				<li><a href="{$smarty.const.WWW_TOP}/xxx.php">XXX</a></li>
+				<li><a href="{$smarty.const.WWW_TOP}/release-list.php?action=list">Releases</a></li>
 			</ul>
 		</li>
 		<li>Users
 			<ul>
-				<li><a href="{$smarty.const.WWW_TOP}/user-list.php?action=list">Manage Users</a></li>
-				<li><a href="{$smarty.const.WWW_TOP}/role-list.php?action=list">Manage User Roles</a></li>
+				<li><a href="{$smarty.const.WWW_TOP}/user-list.php?action=list">Users</a></li>
+				<li><a href="{$smarty.const.WWW_TOP}/role-list.php?action=list">User Roles</a></li>
 			</ul>
 		</li>
 		<li>Misc
