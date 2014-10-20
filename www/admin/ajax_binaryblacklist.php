@@ -18,6 +18,8 @@ if (isset($_GET['action'])) {
 		case "update":
 			$id = (int)$_GET['id'];
 			$ret = $bin->updateBlacklist($_POST);
+			$returnData = json_encode(array("success" => true, "id" => $id));
+			print($returnData);
 			break;
 		case "add":
 			$id = $bin->addBlacklist($_POST);

@@ -32,7 +32,7 @@
 				{$admin_menu}
 		</div>
 			<div style='margin: 3px; width: 100%; height: 100%; padding-top: 30px;' id="contentPanel">
-			{$pagecontent}
+			{$page->content}
 			</div>
 		{if $site->google_analytics_acc != ''}
 			{literal}
@@ -67,10 +67,6 @@
 		/*
 		$('#themelist').jqxDropDownList({ selectedIndex: 0, width: 'auto', height: '30px', theme: theme });
 		 */
-		function loadcontent(url){
-		$("#contentPanel").load(url);
-
-		}
 		</script>
 		{/literal}
 	</body>

@@ -4,11 +4,14 @@
 	the blacklist. They can also be included only if they match a regex (whitelist).
 	<br>Select a row, click edit or double click the row to change.
 </p>
-<div id="message"></div>
-
+<div>
+	<span id="message"></span>
+</div>
 {literal}
 	<script type="text/javascript">
 	$(document).ready(function () {
+		var editrow = -1;
+		var rowID = -1;
 		var message = '<div align="center" class="jqx-widget-header-' + theme + '">';
 		var source =
 		{
@@ -27,6 +30,7 @@
 				$.ajax({
 					dataType: 'json',
 					url: 'ajax_binaryblacklist.php?action=add&rowid=' + rowid,
+					cache: false,
 					data: rowdata,
 					type: 'post',
 					success: function (data, status, xhr) {
@@ -34,6 +38,7 @@
 						commit(true);
 						$('#jqxgrid').jqxGrid('setcellvaluebyid', data.rowid, 'id', data.id);
 						$('#jqxgrid').jqxGrid('ensurerowvisible', data.rowid);
+
 
 					},
 					error: function (error, responseText, errorThrown) {
@@ -66,9 +71,13 @@
 					data: rowdata,
 					type: 'post',
 					success: function (data, status, xhr) {
-						if (data) {
 							commit(true);
-						}
+							$('#message').html('<div align="center" class="jqx-widget-header-' + theme +
+								'">Updated ID: ' + $("#binaryid").val() + '</div><br />');
+					},
+					error: function (error, responseText, errorThrown) {
+						$("#message").html(message + 'Error: ' + responseText);
+						commit(false);
 					}
 				});
 			}
@@ -116,7 +125,6 @@
 		$("#fieldmessageid").jqxRadioButton({groupName: 'msgcol', height: 25, theme: theme});
 		$("#typewhite").jqxRadioButton({groupName: 'optype', height: 25, theme: theme});
 		$("#typeblack").jqxRadioButton({groupName: 'optype', height: 25, theme: theme});
-		var editrow = -1;
 		var dataAdapter = new $.jqx.dataAdapter(source);
 		$("#jqxgrid").jqxGrid(
 			{
@@ -128,17 +136,22 @@
 				showtoolbar: true,
 				pageable: true,
 				rendertoolbar: function (toolbar) {
-					var me = this;
 					var container = $("<div style='overflow: hidden; position: relative; margin: 5px;'></div>");
-					var addrowrowbutton = $("<div id='addrowbutton' style='float: left; margin-left: 5px;'><img style='position: relative; margin-top: 2px;' src='../../themes_shared/images/layout/add.png'/><span style='margin-left: 4px; position: relative; top: -3px;'>Add</span></div>");
-					var deleterowbutton=$("<div id='deleterowbutton' style='float: left; margin-left: 5px;'><img style='position: relative; margin-top: 2px;' src='../../themes_shared/images/layout/close.png'/><span style='margin-left: 4px; position: relative; top: -3px;'>Delete</span></div>");
-					container.append(addrowrowbutton);
+					var addrowbutton = $("<div id='addrowbutton' style='float: left; margin-left: 5px;'><img style='position: relative; margin-top: 2px;' src='../../themes_shared/images/layout/add.png'/><span style='margin-left: 4px; position: relative; top: -3px;'>Add</span></div>");
+					var editrowbutton = $("<div id='editrowbutton' style='float: left; margin-left: 5px;'><img style='position: relative; margin-top: 2px;' src='../../themes_shared/images/layout/add.png'/><span style='margin-left: 4px; position: relative; top: -3px;'>Edit</span></div>");
+					var deleterowbutton = $("<div id='deleterowbutton' style='float: left; margin-left: 5px;'><img style='position: relative; margin-top: 2px;' src='../../themes_shared/images/layout/close.png'/><span style='margin-left: 4px; position: relative; top: -3px;'>Delete</span></div>");
+					container.append(addrowbutton);
+					container.append(editrowbutton);
 					container.append(deleterowbutton);
 					toolbar.append(container);
-					addrowrowbutton.jqxButton({theme: theme});
+					addrowbutton.jqxButton({theme: theme});
+					editrowbutton.jqxButton({theme: theme});
 					deleterowbutton.jqxButton({theme: theme});
-					addrowrowbutton.click(function (row) {
-						openEditWindow(-1, 'new');
+					addrowbutton.click(function () {
+						openEditWindow('new');
+					});
+					editrowbutton.click(function () {
+						openEditWindow('old');
 					});
 					deleterowbutton.click(function () {
 						var selectedrowindex = $("#jqxgrid").jqxGrid('getselectedrowindex');
@@ -156,23 +169,18 @@
 					{ text: 'Status', datafield: 'status', width: '120px', cellsrenderer: statusrender }
 				]
 			});
-		$('#jqxgrid').on('rowdoubleclick', function (){
-			var selectedrowindex = $("#jqxgrid").jqxGrid('getselectedrowindex');
-			var id = $("#jqxgrid").jqxGrid('getrowid', selectedrowindex);
-		openEditWindow(id, 'old');
+		$('#jqxgrid').on('rowdoubleclick', function () {
+			openEditWindow('old');
 		});
 
 		$("#popupWindow").jqxWindow({
-			width: $("#contentPanel").width() -
-				200, isModal: true, autoOpen: false, cancelButton: $("#Cancel"), modalOpacity: 0.01
-		});
-		$("#popupWindow").on('open', function () {
-			$("#groupname").jqxInput('selectAll');
+			width: $("#contentPanel").width() - 200, isModal: true, autoOpen: false, cancelButton: $("#Cancel"), modalOpacity: 0.01
 		});
 
 		$("#Cancel").jqxButton({ theme: theme });
 		$("#Save").jqxButton({ theme: theme });
 		$("#Save").click(function () {
+			$('#newbinary').jqxValidator('validate');
 			var binaryid = $('#binaryid').val();
 			var active = 0;
 			if ($('#active1').jqxRadioButton('checked')) {
@@ -189,24 +197,31 @@
 			if ($('#fieldmessageid').jqxRadioButton('checked')) {
 				fieldmessage = 3;
 			}
-			var row = { id: $("#binaryid").val(), groupname: $("#groupname").val(), regex: $("#regex").val(), msgcol: fieldmessage,
+			if (binaryid == ""){
+			binaryid = null;
+			}
+			var row = { id: binaryid, groupname: $("#groupname").val(), regex: $("#regex").val(), msgcol: fieldmessage,
 				optype: type, status: active, description: $("#description").val()
 			};
-			var rowID = $('#jqxgrid').jqxGrid('getrowid', editrow);
-			if (binaryid != "") {
-				$('#message').html('<div align="center" class="jqx-widget-header-' + theme + '">Updated ID: ' + $("#binaryid").val() + '</div><br />');
-				$('#jqxgrid').jqxGrid('updaterow', rowID, row);
+			if (binaryid != null) {
+				var selectedrowindex = $("#jqxgrid").jqxGrid('getselectedrowindex');
+				var rowscount = $("#jqxgrid").jqxGrid('getdatainformation').rowscount;
+				if (selectedrowindex >= 0 && selectedrowindex < rowscount) {
+					var id = $("#jqxgrid").jqxGrid('getrowid', selectedrowindex);
+					var commit = $("#jqxgrid").jqxGrid('updaterow', id, row);
+					$("#jqxgrid").jqxGrid('ensurerowvisible', selectedrowindex);
+				}
 			} else {
-				$('#jqxgrid').jqxGrid('addrow', rowID, row);
+				var commit = $('#jqxgrid').jqxGrid('addrow', null, row);
 			}
-			$("#popupWindow").jqxWindow('hide');
+			$("#popupWindow").jqxWindow('close');
 		});
 		$("#jqxgrid").jqxGrid('autoresizecolumns');
-		function openEditWindow(editrow, neworold) {
-			$("#active1").jqxRadioButton({ checked: true });
-			$("#typeblack").jqxRadioButton({ checked: true });
-			$("#fieldsubject").jqxRadioButton({ checked: true });
+		function openEditWindow(neworold) {
+			resetEditWindow();
 			if (neworold == "old") {
+				var selectedrowindex = $("#jqxgrid").jqxGrid('getselectedrowindex');
+				editrow = $("#jqxgrid").jqxGrid('getrowid', selectedrowindex);
 				var dataRecord = $("#jqxgrid").jqxGrid('getrowdata', editrow);
 				$("#binaryid").val(dataRecord.id);
 				$("#groupname").val(dataRecord.groupname);
@@ -234,6 +249,26 @@
 			}
 			$("#popupWindow").jqxWindow('open');
 		}
+
+		function resetEditWindow() {
+			$("#binaryid").val("");
+			$("#message").html("");
+			$("#active1").jqxRadioButton({ checked: true });
+			$("#typeblack").jqxRadioButton({ checked: true });
+			$("#fieldsubject").jqxRadioButton({ checked: true });
+			$("#groupname").val("");
+			$("#regex").val("");
+			$("#description").val("");
+		}
+
+		$('#newbinary').jqxValidator({
+			hintType: 'label',
+			animationDuration: 0,
+			rules: [
+				{ input: '#groupname', message: 'A Group Name is required!', action: 'keyup, blur', rule: 'required' }
+				],
+			theme: theme
+		});
 	});
 	</script>
 {/literal}
@@ -245,14 +280,13 @@
 <div id="popupWindow">
 	<div>Edit</div>
 	<div style="overflow: hidden;">
+		<form id="newbinary" action="./">
 		<table>
 			<tr>
 				<input type="hidden" id="binaryid" />
+				The full name of a valid newsgroup. (Wildcard in the format 'alt.binaries.*')
 				<td align="right">Group:</td>
 				<td align="left"><input id="groupname" /></td>
-				<div class="hint">The full name of a valid newsgroup. (Wildcard in the format
-								  'alt.binaries.*')
-				</div>
 			</tr>
 			<tr>
 				<td align="right">Regex:</td>
@@ -291,5 +325,6 @@
 					<input id="Cancel" type="button" value="Cancel" /></td>
 			</tr>
 		</table>
+		</form>
 	</div>
 </div>
