@@ -33,10 +33,15 @@
 		</li>
 		<li>Misc
 			<ul>
-				<li><a href="{$smarty.const.WWW_TOP}/release-list.php?action=list">Manage Releases</a></li>
-				<li><a href="{$smarty.const.WWW_TOP}/release-list.php?action=list">Manage Releases</a></li>
-				<li><a href="{$smarty.const.WWW_TOP}/release-list.php?action=list">Manage Releases</a></li>
-				<li><a href="{$smarty.const.WWW_TOP}/release-list.php?action=list">Manage Releases</a></li>
+				<li><a href="{$smarty.const.WWW_TOP}/delete-releases.php">Delete Releases</a></li>
+				<li><a href="{$smarty.const.WWW_TOP}/nzb-import.php">Import NZBs</a></li>
+				<li><a href="{$smarty.const.WWW_TOP}/nzb-export.php">Export NZBs</a></li>
+				<li><a href="{$smarty.const.WWW_TOP}/opcachestats.php">Opcache Statistics</a></li>
+				<li><a href="{$smarty.const.WWW_TOP}/db-optimise.php">Optimize Database</a></li>
+				<li><a href="{$smarty.const.WWW_TOP}/sharing.php">Sharing</a></li>
+				<li><a href="{$smarty.const.WWW_TOP}/site-stats.php">Site Statistics</a></li>
+				<li><a href="{$smarty.const.WWW_TOP}/comments-list.php">Release Comments</a></li>
+				<li><a href="{$smarty.const.WWW_TOP}/view-logs.php">View Logs</a></li>
 			</ul>
 		</li>
 		<li>

@@ -33,28 +33,12 @@ Select a row, click edit or double click the row to change.
 				{ name: 'updateddate', type: 'string' },
 
 			],
+			root: 'results',
+			beforeprocessing: function(data) {
+				console.log(data);
+					source.totalrecords = data.totalrows;
+				},
 			url: 'ajax_xxx.php?action=list',
-			addrow: function (rowid, rowdata, position, commit) {
-				$.ajax({
-					dataType: 'json',
-					url: 'ajax_xxx.php?action=add&rowid=' + rowid,
-					cache: false,
-					data: rowdata,
-					type: 'post',
-					success: function (data, status, xhr) {
-						$("#message").html(message + 'Added Row: ' + data.id + '</div>');
-						commit(true);
-						$('#jqxgrid').jqxGrid('setcellvaluebyid', data.rowid, 'id', data.id);
-						$('#jqxgrid').jqxGrid('ensurerowvisible', data.rowid);
-
-
-					},
-					error: function (error, responseText, errorThrown) {
-						$("#message").html(message + 'Error: ' + responseText);
-						commit(false);
-					}
-				});
-			},
 			deleterow: function (rowid, commit) {
 				var dataRecord = $("#jqxgrid").jqxGrid('getrowdata', rowid);
 				var databaseid = dataRecord.id;
@@ -90,96 +74,63 @@ Select a row, click edit or double click the row to change.
 				});
 			}
 		};
-		var optyperender = function (row, columnfield, value, defaulthtml, columnproperties) {
-			if (value == 2) {
-				return '<span style="margin: 4px; float: ' + columnproperties.cellsalign +
-					';">White</span>';
-			}
-			if (value == 1) {
-				return '<span style = "margin: 4px; float: ' + columnproperties.cellsalign +
-					';">Black</span>';
-			}
-		};
-		var statusrender = function (row, columnfield, value, defaulthtml, columnproperties) {
-			if (value == 1) {
-				return '<span style = "margin: 4px; float: ' + columnproperties.cellsalign +
-					';">Active</span>';
-			} else {
-				return '<span style = "margin: 4px; float: ' + columnproperties.cellsalign +
-					';">Disabled</span>';
-			}
-		};
-		var msgcolrender = function (row, columnfield, value, defaulthtml, columnproperties) {
-			if (value == 1) {
-				return '<span style = "margin: 4px; float: ' + columnproperties.cellsalign +
-					';">Subject</span>';
-			} else {
-				if (value == 2) {
-					return '<span style = "margin: 4px; float: ' + columnproperties.cellsalign +
-						';">Poster</span>';
-				} else {
-					return '<span style = "margin: 4px; float: ' + columnproperties.cellsalign +
-						';">MessageID</span>';
-				}
-			}
-		};
-		$("#groupname").jqxInput({theme: theme, width: 300});
-		$("#regex").jqxInput({theme: theme, height: 150, width: 300});
-		$("#description").jqxInput({theme: theme, width: 300});
-		$("#active0").jqxRadioButton({groupName: 'status', height: 25, theme: theme});
-		$("#active1").jqxRadioButton({groupName: 'status', height: 25, theme: theme});
-		$("#fieldsubject").jqxRadioButton({groupName: 'msgcol', height: 25, theme: theme});
-		$("#fieldposter").jqxRadioButton({groupName: 'msgcol', height: 25, theme: theme});
-		$("#fieldmessageid").jqxRadioButton({groupName: 'msgcol', height: 25, theme: theme});
-		$("#typewhite").jqxRadioButton({groupName: 'optype', height: 25, theme: theme});
-		$("#typeblack").jqxRadioButton({groupName: 'optype', height: 25, theme: theme});
-
+		console.log(source);
+		$("#title").jqxInput({theme: theme, width: 300});
+		$("#tagline").jqxInput({theme: theme, width: 300});
+		$("#plot").jqxInput({theme: theme, height: 150, width: 300});
+		$("#director").jqxInput({theme: theme});
+		$("#actors").jqxInput({theme: theme});
+		$("#trailers").jqxInput({theme: theme});
+		$("#directurl").jqxInput({theme: theme});
 		var initrowdetails = function (index, parentElement, gridElement, datarecord) {
 			var tabsdiv = null;
 			var information = null;
-			var notes = null;
+			var trailer = null;
+			var photos = null;
 			tabsdiv = $($(parentElement).children()[0]);
 			if (tabsdiv != null) {
 				information = tabsdiv.find('.information');
-				notes = tabsdiv.find('.notes');
+				trailer = tabsdiv.find('.trailer');
+				photos = tabsdiv.find('.photos');
 				var title = tabsdiv.find('.title');
 				title.text(datarecord.title);
 				var container = $('<div style="margin: 5px;"></div>');
 				container.appendTo($(information));
-				var photocolumn = $('<div style="float: left; width: 15%;"></div>');
-				var leftcolumn = $('<div style="float: left; width: 45%;"></div>');
-				var rightcolumn = $('<div style="float: left; width: 40%;"></div>');
-				container.append(photocolumn);
+				var leftcolumn = $('<div style="float: left; width: 50%;"></div>');
+				var rightcolumn = $('<div style="float: left; width: 50%;"></div>');
 				container.append(leftcolumn);
 				container.append(rightcolumn);
+				var title = "<div style='margin: 10px;'><b>Title:</b> " + datarecord.title + "</div>";
+				var director = "<div style='margin: 10px;'><b>Director:</b> " + datarecord.director + "</div>";
+				var createddate = "<div style='margin: 10px;'><b>Created Date:</b> " + datarecord.createddate + "</div>";
+				var updateddate = "<div style='margin: 10px;'><b>Updated Date:</b> " + datarecord.updateddate + "</div>";
+				$(leftcolumn).append(title);
+				$(leftcolumn).append(director);
+				$(leftcolumn).append(createddate);
+				$(leftcolumn).append(updateddate);
+				var genre = "<div style='margin: 10px;'><b>Genres: </b><div id='Genrelist'></div></div>";
+				var actors = "<div style='margin: 10px;'><b>Actors:</b><div id='Actorlist'></div></div>";
+				$(rightcolumn).append(genre);
+				$(rightcolumn).append(actors);
 				var photo = $("<div class='jqx-rc-all' style='margin: 10px;'><b>Photos:</b></div>");
 				var image = $("<div style='margin-top: 10px;'></div>");
 				var coverurl = '../../covers/xxx/' + datarecord.id + '-cover.jpg';
-				var cover = $('<img height="60" src="' + coverurl + '"/>');
+				var cover = $('<img width="160" height="228" src="' + coverurl + '"/>');
 				var backdropurl = '../../covers/xxx/' + datarecord.id + '-backdrop.jpg';
-				var backdrop = $('<img height="60" src="' + backdropurl + '"/>');
+				var backdrop = $('<img width="160" height="228" src="' + backdropurl + '"/>');
 				image.append(cover);
 				image.append(backdrop);
 				image.appendTo(photo);
-				photocolumn.append(photo);
-				var title = "<div style='margin: 10px;'><b>Title:</b> " +
-					datarecord.title + "</div>";
-				$(leftcolumn).append(title);
-				var postalcode = "<div style='margin: 10px;'><b>Postal Code:</b> " +
-					datarecord.postalcode + "</div>";
-				var city = "<div style='margin: 10px;'><b>City:</b> " + datarecord.city + "</div>";
-				var phone = "<div style='margin: 10px;'><b>Phone:</b> " + datarecord.homephone +
-					"</div>";
-				var hiredate = "<div style='margin: 10px;'><b>Hire Date:</b> " +
-					datarecord.hiredate + "</div>";
-				$(rightcolumn).append(postalcode);
-				$(rightcolumn).append(city);
-				$(rightcolumn).append(phone);
-				$(rightcolumn).append(hiredate);
-				var notescontainer = $('<div style="white-space: normal; margin: 5px;"><span>' +
-					datarecord.notes + '</span></div>');
-				$(notes).append(notescontainer);
-				$(tabsdiv).jqxTabs({ width: 750, height: 170});
+				$(photos).append(photo);
+				if (datarecord.hastrailer == 1) {
+				var trailercontainer = $('<div style="white-space: normal; margin: 5px;"><span>' + datarecord.hastrailer + '</span></div>');
+				$(trailer).append(trailercontainer);
+				} else {
+					$(tabsdiv).jqxTabs('disableAt', $(trailer));
+				}
+				createdropdownbox('#Genrelist', null, null, datarecord.genre, 'title', 'id');
+				createdropdownbox('#Actorlist', null, null, datarecord.actors);
+				$(tabsdiv).jqxTabs({ width: $('#jqxgrid').width - 200, height: 320});
 			}
 		};
 
@@ -189,28 +140,27 @@ Select a row, click edit or double click the row to change.
 				width: '100%',
 				source: dataAdapter,
 				rowdetails: true,
-                rowdetailstemplate: { rowdetails: "<div style='margin: 10px;'><ul style='margin-left: 30px;'><li class='title'></li><li>Notes</li></ul><div class='information'></div><div class='notes'></div></div>", rowdetailsheight: 200 },
+                rowdetailstemplate: { rowdetails: "<div style='margin: 10px;'><ul style='margin-left: 30px;'><li class='title'></li><li>Photos</li><li>Trailers</li></ul><div class='information'></div><div class='photos'></div><div class='trailer'></div></div>", rowdetailsheight: 350 },
                 initrowdetails: initrowdetails,
 				theme: theme,
 				columnsresize: true,
 				autoheight: true,
 				showtoolbar: true,
 				pageable: true,
+				virtualmode: true,
+				rendergridrows: function()
+				{
+					  return dataAdapter.records;
+				},
 				rendertoolbar: function (toolbar) {
 					var container = $("<div style='overflow: hidden; position: relative; margin: 5px;'></div>");
-					var addrowbutton = $("<div id='addrowbutton' style='float: left; margin-left: 5px;'><img style='position: relative; margin-top: 2px;' src='../../themes_shared/images/layout/add.png'/><span style='margin-left: 4px; position: relative; top: -3px;'>Add</span></div>");
 					var editrowbutton = $("<div id='editrowbutton' style='float: left; margin-left: 5px;'><img style='position: relative; margin-top: 2px;' src='../../themes_shared/images/layout/add.png'/><span style='margin-left: 4px; position: relative; top: -3px;'>Edit</span></div>");
 					var deleterowbutton = $("<div id='deleterowbutton' style='float: left; margin-left: 5px;'><img style='position: relative; margin-top: 2px;' src='../../themes_shared/images/layout/close.png'/><span style='margin-left: 4px; position: relative; top: -3px;'>Delete</span></div>");
-					container.append(addrowbutton);
 					container.append(editrowbutton);
 					container.append(deleterowbutton);
 					toolbar.append(container);
-					addrowbutton.jqxButton({theme: theme});
 					editrowbutton.jqxButton({theme: theme});
 					deleterowbutton.jqxButton({theme: theme});
-					addrowbutton.click(function () {
-						openEditWindow('new');
-					});
 					editrowbutton.click(function () {
 						openEditWindow('old');
 					});
@@ -221,17 +171,15 @@ Select a row, click edit or double click the row to change.
 					});
 				},
 				columns: [
-					{ text: 'ID', datafield: 'id', width: '120px' },
+					{ text: 'Database ID', datafield: 'id', width: '120px' },
 					{ text: 'Title', datafield: 'title' },
 					{ text: 'Tagline', datafield: 'tagline' },
-					{ text: 'Plot', datafield: 'plot', width: '120px' },
-					{ text: 'Genre', datafield: 'genre', width: '120px' },
-					{ text: 'Director', datafield: 'director' },
-					{ text: 'Actors', datafield: 'actors', width: '120px' }
+					{ text: 'Plot', datafield: 'plot' },
+					{ text: 'Director', datafield: 'director' }
 				]
 			});
 		$('#jqxgrid').on('rowdoubleclick', function () {
-			openEditWindow('old');
+			openEditWindow();
 		});
 
 		$("#popupWindow").jqxWindow({
@@ -243,26 +191,11 @@ Select a row, click edit or double click the row to change.
 		$("#Save").click(function () {
 			$('#newbinary').jqxValidator('validate');
 			var binaryid = $('#binaryid').val();
-			var active = 0;
-			if ($('#active1').jqxRadioButton('checked')) {
-				active = 1;
-			}
-			var type = 1;
-			if ($('#typewhite').jqxRadioButton('checked')) {
-				type = 2;
-			}
-			var fieldmessage = 1;
-			if ($('#fieldposter').jqxRadioButton('checked')) {
-				fieldmessage = 2;
-			}
-			if ($('#fieldmessageid').jqxRadioButton('checked')) {
-				fieldmessage = 3;
-			}
 			if (binaryid == ""){
 			binaryid = null;
 			}
-			var row = { id: binaryid, groupname: $("#groupname").val(), regex: $("#regex").val(), msgcol: fieldmessage,
-				optype: type, status: active, description: $("#description").val()
+			var row = { id: binaryid, title: $("#title").val(), tagline: $("#tagline").val(), director: $("#director").val(),
+				actors: $("#actors").val(), directurl: $("#directurl").val(), trailers: $("#trailers").val(), plot: $("#plot").val()
 			};
 			if (binaryid != null) {
 				var selectedrowindex = $("#jqxgrid").jqxGrid('getselectedrowindex');
@@ -278,55 +211,63 @@ Select a row, click edit or double click the row to change.
 			$("#popupWindow").jqxWindow('close');
 		});
 		$("#jqxgrid").jqxGrid('autoresizecolumns');
-		function openEditWindow(neworold) {
+		function openEditWindow() {
 			resetEditWindow();
-			if (neworold == "old") {
 				var selectedrowindex = $("#jqxgrid").jqxGrid('getselectedrowindex');
 				editrow = $("#jqxgrid").jqxGrid('getrowid', selectedrowindex);
 				var dataRecord = $("#jqxgrid").jqxGrid('getrowdata', editrow);
 				$("#binaryid").val(dataRecord.id);
-				$("#groupname").val(dataRecord.groupname);
-				$("#regex").val(dataRecord.regex);
-				$("#description").val(dataRecord.description);
-				if (dataRecord.status == 1) {
-					$("#active1").jqxRadioButton({ checked: true });
-				} else {
-					$("#active0").jqxRadioButton({ checked: true });
-				}
-				if (dataRecord.optype == 1) {
-					$("#typeblack").jqxRadioButton({ checked: true });
-				} else {
-					$("#typewhite").jqxRadioButton({ checked: true });
-				}
-				if (dataRecord.msgcol == 1) {
-					$("#fieldsubject").jqxRadioButton({ checked: true });
-				} else {
-					if (dataRecord.msgcol == 2) {
-						$("#fieldposter").jqxRadioButton({ checked: true });
-					} else {
-						$("#fieldmessageid").jqxRadioButton({ checked: true });
-					}
-				}
-			}
+				$("#title").val(dataRecord.title);
+				$("#tagline").val(dataRecord.tagline);
+				$("#plot").val(dataRecord.plot);
+				$("#director").val(dataRecord.director);
+				$("#actors").val(dataRecord.actors);
+				$("#directurl").val(dataRecord.directurl);
+				$("#trailers").val(dataRecord.trailers);
 			$("#popupWindow").jqxWindow('open');
 		}
 
 		function resetEditWindow() {
 			$("#binaryid").val("");
 			$("#message").html("");
-			$("#active1").jqxRadioButton({ checked: true });
-			$("#typeblack").jqxRadioButton({ checked: true });
-			$("#fieldsubject").jqxRadioButton({ checked: true });
-			$("#groupname").val("");
-			$("#regex").val("");
-			$("#description").val("");
+
+			$("#title").val("");
+			$("#tagline").val("");
+			$("#plot").val("");
+			$("#director").val("");
+			$("#actors").val("");
+			$("#directurl").val("");
+			$("#trailers").val("");
+			$("#plot").val("");
 		}
 
-		$('#newbinary').jqxValidator({
+		function createdropdownbox (element, url, datafields, dadapter, displaymember, valuemember, xwidth=200, yheight=25) {
+               if (url != null && datafields != null) {
+                var source =
+                {
+                    datatype: "json",
+                    datafields: datafields,
+                    id: 'id',
+                    url: url
+                };
+                var dadapter = new $.jqx.dataAdapter(source);
+			   }
+                $(element).jqxDropDownList({ selectedIndex:0, source: dadapter, displayMember: displaymember, valueMember: valuemember, width: xwidth, height: yheight});
+                $(element).on('select', function (event) {
+                    if (event.args) {
+                        var item = event.args.item;
+                        if (item) {
+						return item;
+                        }
+                    }
+                });
+		}
+
+		$('#xxxedit').jqxValidator({
 			hintType: 'label',
 			animationDuration: 0,
 			rules: [
-				{ input: '#groupname', message: 'A Group Name is required!', action: 'keyup, blur', rule: 'required' }
+				{ input: '#title', message: 'A title is required', action: 'keyup, blur', rule: 'required' }
 				],
 			theme: theme
 		});
@@ -337,43 +278,37 @@ Select a row, click edit or double click the row to change.
 <div id="popupWindow">
 	<div>Edit</div>
 	<div style="overflow: hidden;">
-		<form id="newbinary" action="./">
+		<form id="xxxedit" action="./">
 		<table>
 			<tr>
 				<input type="hidden" id="binaryid" />
 				The full name of a valid newsgroup. (Wildcard in the format 'alt.binaries.*')
-				<td align="right">Group:</td>
-				<td align="left"><input id="groupname" /></td>
+				<td align="right">Title:</td>
+				<td align="left"><input id="title" /></td>
 			</tr>
 			<tr>
-				<td align="right">Regex:</td>
-				<td align="left"><textarea id="regex"></textarea></td>
+				<td align="right">Tagline:</td>
+				<td align="left"><textarea id="tagline"></textarea></td>
 			</tr>
 			<tr>
-				<td align="right">Description:</td>
-				<td align="left"><textarea id="description"></textarea></td>
+				<td align="right">Plot:</td>
+				<td align="left"><textarea id="plot"></textarea></td>
 			</tr>
 			<tr>
-				<td align="right">Message Field:</td>
-				<td align="left">
-					<div id="fieldsubject">Subject</div>
-					<div id="fieldposter">Poster</div>
-					<div id="fieldmessageid">MessageId</div>
-				</td>
+				<td align="right">Director:</td>
+				<td align="left"><input id="director" /></td>
 			</tr>
 			<tr>
-				<td align="right">Type:</td>
-				<td align="left">
-					<div id="typeblack">Black</div>
-					<div id="typewhite">White</div>
-				</td>
+				<td align="right">Actors:</td>
+				<td align="left"><input id="actors" /></td>
 			</tr>
 			<tr>
-				<td align="right">Active:</td>
-				<td align="left">
-					<div id="active1">Yes</div>
-					<div id="active0">No</div>
-				</td>
+				<td align="right">Direct Url:</td>
+				<td align="left"><input id="directurl" /></td>
+			</tr>
+			<tr>
+				<td align="right">Trailer Url:</td>
+				<td align="left"><input id="trailers" /></td>
 			</tr>
 			<tr>
 				<td align="right"></td>

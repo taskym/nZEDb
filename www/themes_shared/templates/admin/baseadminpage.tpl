@@ -27,7 +27,7 @@
 	{$page->head}
 	</head>
 
-	<body class="default">
+	<body id="mainbody">
 		<div style="position: fixed; width: 100%; height: 30px;">
 				{$admin_menu}
 		</div>
@@ -57,6 +57,7 @@
 			var WWW_TOP = "{$smarty.const.WWW_TOP}/..";
 			$(document).ready(function () {
 				initthemes("/admin/../themes_shared/styles/layout/jqx.");
+				$("#mainbody").attr('class', theme);
 				$("#adminMenu").jqxMenu({ theme: theme, showTopLevelArrows: true, width: '100%', height: '30px'});
                 $("#adminMenu").css('visibility', 'visible');
 				$("#adminMenu").css('position', 'absolute');
