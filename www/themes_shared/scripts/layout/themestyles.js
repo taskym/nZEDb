@@ -36,7 +36,7 @@ function initthemes(initialurl) {
     ];
     var me = this;
     this.$head = $('head');
-    $('#themelist').jqxDropDownList({ source: themes, theme: theme, selectedIndex: 0, dropDownHeight: 200, width: '98%', height: '20px' });
+    $('#themelist').jqxDropDownList({ source: themes, selectedIndex: 0, dropDownHeight: 200, height: '20px' });
     var hasParam = window.location.toString().indexOf('#css=');
     if (hasParam != -1) {
         var theme = window.location.toString().substring(hasParam + 5);
@@ -49,13 +49,15 @@ function initthemes(initialurl) {
                 return false;
             }
         });
-        $('#themelist').jqxDropDownList({ selectedIndex: themeIndex });
+        $('#themelist').jqxDropDownList({ theme: theme, selectedIndex: themeIndex, width: '175px'});
         loadedThemes[0] = -1;
         loadedThemes[themeIndex] = 0;
     }
     else {
-        $.data(document.body, 'theme', 'arctic');
-        window.location = window.location.toString() + "#css=arctic";
+	    var theme = checkCookie();
+        $.data(document.body, 'theme', theme);
+        window.location = window.location.toString() + "#css=" + theme;
+	    location.reload();
     }
     $('#themelist').on('select', function (event) {
         setTimeout(function () {
@@ -90,18 +92,42 @@ function initthemes(initialurl) {
                 { label: 'Le Frog', group: 'UI Compatible', value: 'ui-le-frog' }
             ];
             selectedTheme = themes[selectedIndex].value;
-            url += selectedTheme + '.css';
-            if (!loaded) {
-                if (document.createStyleSheet != undefined) {
-                    document.createStyleSheet(url);
-                }
-                else {
-                    me.$head.append('<link rel="stylesheet" href="' + url + '" media="screen" />');
-                }
-            }
+	        setCookie("theme", selectedTheme, 365);
+             window.location.replace(window.location.protocol + "//" + window.location.host + window.location.pathname + "#css=" + selectedTheme);
+	        window.location.reload();
         }, 5);
     });
 };
+
+function setCookie(cname, cvalue, exdays) {
+	var d = new Date();
+	d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+	var expires = "expires=" + d.toUTCString();
+	document.cookie = cname + "=" + cvalue + "; " + expires;
+}
+
+function getCookie(cname) {
+	var name = cname + "=";
+	var ca = document.cookie.split(';');
+	for (var i = 0; i < ca.length; i++) {
+		var c = ca[i];
+		while (c.charAt(0) == ' ') c = c.substring(1);
+		if (c.indexOf(name) != -1) return c.substring(name.length, c.length);
+	}
+	return "";
+}
+
+function checkCookie() {
+	var cookietheme = getCookie("theme");
+	if (cookietheme != "") {
+		theme = cookietheme;
+		return cookietheme;
+	} else {
+		setCookie("theme", 'artic', 365);
+		return 'artic';
+	}
+}
+
 function getTheme() {
     var theme = document.body ? $.data(document.body, 'theme') : null
     if (theme == null) {

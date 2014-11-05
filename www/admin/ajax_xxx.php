@@ -7,10 +7,18 @@ if (isset($_GET['action'])) {
 	switch ($_GET['action']) {
 		case "list":
 			$xxxcount = $xxx->getCount();
-			$offset = isset($_REQUEST["offset"]) ? $_REQUEST["offset"] : 0;
-			$xxxmovielist = $xxx->getRange($offset, ITEMS_PER_PAGE);
+			$offset = $_REQUEST["pagenum"] * $_REQUEST["pagesize"];
+			if ($offset == 0) {
+				$offset = 10;
+			}
+			$pagesize = isset($_REQUEST["pagesize"]) ? $_REQUEST["pagesize"] : ITEMS_PER_PAGE;
+			$xxxmovielist = $xxx->getRange($offset, $pagesize);
 			foreach ($xxxmovielist as $key => $mov) {
 				$xxxmovielist[$key]['hastrailer'] = (!empty($mov['trailers'])) ? 1 : 0;
+				$xxxmovielist[$key]['trailer'] = (!empty($mov['trailers'])) ? unserialize($mov['trailers']) : 0;
+				if ($xxxmovielist[$key]['hastrailer'] == 1) {
+					$xxxmovielist[$key]['trailers'] = $xxxmovielist[$key]['trailer']['url'];
+				}
 				if (stristr($mov['genre'], ",")) {
 					$arr = explode(",", $mov['genre']);
 					foreach ($arr as $k => $value) {
@@ -30,11 +38,10 @@ if (isset($_GET['action'])) {
 				}
 			}
 			$data[] = array(
-				'totalrows' => (int)$xxxcount,
+				'TotalRows' => $xxxcount,
 				'results' => $xxxmovielist
 			);
-			$returnData = json_encode($data);
-			print($returnData);
+			echo json_encode($data);
 			break;
 		case "delete":
 			$id = (int)$_GET['id'];
@@ -57,5 +64,6 @@ if (isset($_GET['action'])) {
 		default:
 			print "Error: No Command Given";
 	}
+	exit;
 }
 

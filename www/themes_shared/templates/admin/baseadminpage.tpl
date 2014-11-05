@@ -65,9 +65,6 @@
 					$("html, body").animate({scrollTop: $('#' + $(this).val()).offset().top}, "slow");
 				});
 			});
-		/*
-		$('#themelist').jqxDropDownList({ selectedIndex: 0, width: 'auto', height: '30px', theme: theme });
-		 */
 		</script>
 		{/literal}
 	</body>
