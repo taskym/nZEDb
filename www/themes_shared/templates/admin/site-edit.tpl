@@ -4,8 +4,9 @@
 		<td><h1>{$page->title}</h1></td>
 		<td></td>
 		<td align="right" id="top-nav">
-			<form id="site_jumpbox" action="#">
-				<select>
+			<div id="jumpbox"> </div>
+				<select id="select">
+					<option value="#">Quick Jump</option>
 					<option value="site_externalapis">3rd Party API Keys</option>
 					<option value="site_externalapps">3rd Party Application Paths</option>
 					<option value="site_developerset">Developer Settings</option>
@@ -25,7 +26,6 @@
 					<option value="site_usersettings">User Settings</option>
 					<option value="site_variousset">Various Settings</option>
 				</select>
-			</form>
 		</td>
 	</tr>
 </table>

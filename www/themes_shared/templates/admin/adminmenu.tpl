@@ -44,8 +44,10 @@
 				<li><a href="{$smarty.const.WWW_TOP}/view-logs.php">View Logs</a></li>
 			</ul>
 		</li>
-		<li>
+		<li>Theme
+			<ul style="width: 180px;">
 			<div id="themelist"></div>
+			</ul>
 		</li>
 	</ul>
 </div>

@@ -4,8 +4,9 @@
 		<td><h1>{$page->title}</h1></td>
 		<td></td>
 		<td align="right" id="top-nav">
-			<form action="#">
-				<select>
+			<div id="jumpbox"></div>
+				<select id="select">
+					<option value="#">Quick Jump</option>
 					<option value="tmux_backfill">Backfill</option>
 					<option value="tmux_commentsharing">Comment Sharing</option>
 					<option value="tmux_decrypthashes">Decrypt Hashes</option>
@@ -22,7 +23,6 @@
 					<option value="tmux_updatereleases">Update Releases</option>
 					<option value="tmux_updatetvtheater">Update TV/Theater</option>
 				</select>
-			</form>
 		</td>
 	</tr>
 </table>

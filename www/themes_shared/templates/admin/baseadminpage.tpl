@@ -61,9 +61,15 @@
 				$("#adminMenu").jqxMenu({ theme: theme, showTopLevelArrows: true, width: '100%', height: '30px'});
                 $("#adminMenu").css('visibility', 'visible');
 				$("#adminMenu").css('position', 'absolute');
-				$('.top-nav').on('select').bind('change', function () {
+				console.log(location.pathname);
+				if (location.pathname == "/admin/site-edit.php" || location.pathname == "/admin/tmux-edit.php") {
+				$("#jumpbox").jqxDropDownList({selectedIndex: 0, theme: theme});
+				$("#jumpbox").jqxDropDownList('loadFromSelect', 'select');
+				$("#jumpbox").on('select').bind('change', function () {
 					$("html, body").animate({scrollTop: $('#' + $(this).val()).offset().top}, "slow");
 				});
+				$("#select").hide();
+				}
 			});
 		</script>
 		{/literal}

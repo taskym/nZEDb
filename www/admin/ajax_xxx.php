@@ -8,9 +8,6 @@ if (isset($_GET['action'])) {
 		case "list":
 			$xxxcount = $xxx->getCount();
 			$offset = $_REQUEST["pagenum"] * $_REQUEST["pagesize"];
-			if ($offset == 0) {
-				$offset = 10;
-			}
 			$pagesize = isset($_REQUEST["pagesize"]) ? $_REQUEST["pagesize"] : ITEMS_PER_PAGE;
 			$xxxmovielist = $xxx->getRange($offset, $pagesize);
 			foreach ($xxxmovielist as $key => $mov) {
