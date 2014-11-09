@@ -6,10 +6,10 @@
 			<ul>
 				<li><a href="{$smarty.const.WWW_TOP}/binaryblacklist.php">Blacklists</a></li>
 				<li><a href="{$smarty.const.WWW_TOP}/content-list.php">Content Page(s)</a></li>
-				<li><a href="{$smarty.const.WWW_TOP}/category-list.php?action=add">Categories</li>
+				<li><a href="{$smarty.const.WWW_TOP}/category-list.php?action=add">Categories</a></li>
 				<li><a href="{$smarty.const.WWW_TOP}/site-edit.php">Site Settings</a></li>
 				<li><a href="{$smarty.const.WWW_TOP}/group-list.php">Groups</a></li>
-				<li><a href="{$smarty.const.WWW_TOP}/menu-list.php"> Menu</a>
+				<li><a href="{$smarty.const.WWW_TOP}/menu-list.php"> Menu</a></li>
 				<li><a href="{$smarty.const.WWW_TOP}/tmux-edit.php">Tmux Settings</a></li>
 			</ul>
 		</li>
@@ -17,7 +17,7 @@
 			<ul>
 				<li><a href="{$smarty.const.WWW_TOP}/movie-list.php?action=list">Movies</a></li>
 				<li><a href="{$smarty.const.WWW_TOP}/rage-list.php">TV</a></li>
-				<li><a href="{$smarty.const.WWW_TOP}/anidb-list.php?action=add">AniDB</li>
+				<li><a href="{$smarty.const.WWW_TOP}/anidb-list.php?action=add">AniDB</a></li>
 				<li><a href="{$smarty.const.WWW_TOP}/console-list.php">Consoles</a></li>
 				<li><a href="{$smarty.const.WWW_TOP}/game-list.php">Games</a></li>
 				<li><a href="{$smarty.const.WWW_TOP}/music-list.php">Music</a></li>

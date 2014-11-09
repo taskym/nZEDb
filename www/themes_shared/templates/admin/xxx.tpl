@@ -1,6 +1,6 @@
 <h1>{$page->title}</h1>
 <p>
-Select a row, click edit or double click the row to change.
+	Select a row, click edit or double click the row to change.
 </p>
 <div>
 	<span id="message"></span>
@@ -9,8 +9,6 @@ Select a row, click edit or double click the row to change.
 	<script type="text/javascript">
 	$(document).ready(function () {
 		var nzedbgrid = $("#jqxgrid");
-		var editrow = -1;
-		var rowID = -1;
 		var message = '<div align="center" class="jqx-widget-header-' + theme + '">';
 		var source =
 		{
@@ -36,27 +34,10 @@ Select a row, click edit or double click the row to change.
 			],
 			root: 'results',
 			cache: false,
-			beforeprocessing: function(data) {
-					source.totalrecords = data[0].TotalRows;
-				},
-			url: 'ajax_xxx.php?action=list',
-			deleterow: function (rowid, commit) {
-				var dataRecord = nzedbgrid.jqxGrid('getrowdata', rowid);
-				var databaseid = dataRecord.id;
-				$.ajax({
-					dataType: 'json',
-					url: 'ajax_xxx.php?action=delete&id=' + databaseid,
-					success: function (data, status, xhr) {
-						commit(true);
-						$("#message").html(message + 'Deleted ID: ' + data.id + '</div>');
-
-					},
-					error: function (error, responseText, errorThrown) {
-						$("#message").html(message + 'Error: ' + responseText);
-						commit(false);
-					}
-				});
+			beforeprocessing: function (data) {
+				source.totalrecords = data[0].TotalRows;
 			},
+			url: 'ajax_xxx.php?action=list',
 			updaterow: function (rowid, rowdata, commit) {
 				$.ajax({
 					dataType: 'json',
@@ -64,9 +45,9 @@ Select a row, click edit or double click the row to change.
 					data: rowdata,
 					type: 'POST',
 					success: function (data, status, xhr) {
-							commit(true);
-							$('#message').html('<div align="center" class="jqx-widget-header-' + theme +
-								'">Updated ID: ' + $("#xxxid").val() + '</div><br />');
+						commit(true);
+						$('#message').html('<div align="center" class="jqx-widget-header-' + theme +
+							'">Updated ID: ' + $("#xxxid").val() + '</div><br />');
 					},
 					error: function (error, responseText, errorThrown) {
 						$("#message").html(message + 'Error: ' + responseText);
@@ -100,10 +81,14 @@ Select a row, click edit or double click the row to change.
 				var rightcolumn = $('<div style="float: left; width: 50%;"></div>');
 				container.append(leftcolumn);
 				container.append(rightcolumn);
-				var title = "<div style='margin: 10px;'><b>Title:</b> " + datarecord.title + "</div>";
-				var director = "<div style='margin: 10px;'><b>Director:</b> " + datarecord.director + "</div>";
-				var createddate = "<div style='margin: 10px;'><b>Created Date:</b> " + datarecord.createddate + "</div>";
-				var updateddate = "<div style='margin: 10px;'><b>Updated Date:</b> " + datarecord.updateddate + "</div>";
+				var title = "<div style='margin: 10px;'><b>Title:</b> " + datarecord.title +
+					"</div>";
+				var director = "<div style='margin: 10px;'><b>Director:</b> " +
+					datarecord.director + "</div>";
+				var createddate = "<div style='margin: 10px;'><b>Created Date:</b> " +
+					datarecord.createddate + "</div>";
+				var updateddate = "<div style='margin: 10px;'><b>Updated Date:</b> " +
+					datarecord.updateddate + "</div>";
 				$(leftcolumn).append(title);
 				$(leftcolumn).append(director);
 				$(leftcolumn).append(createddate);
@@ -123,8 +108,9 @@ Select a row, click edit or double click the row to change.
 				image.appendTo(photo);
 				$(photos).append(photo);
 				if (datarecord.hastrailer == 1) {
-				var trailercontainer = $('<div style="white-space: normal; margin: 5px;"><span>' + datarecord.trailers + '</span></div>');
-				$(trailer).append(trailercontainer);
+					var trailercontainer = $('<div style="white-space: normal; margin: 5px;"><span>' +
+						datarecord.trailers + '</span></div>');
+					$(trailer).append(trailercontainer);
 				} else {
 					$(tabsdiv).jqxTabs('disableAt', $(trailer));
 				}
@@ -140,34 +126,25 @@ Select a row, click edit or double click the row to change.
 				width: '100%',
 				source: dataAdapter,
 				rowdetails: true,
-                rowdetailstemplate: { rowdetails: "<div style='margin: 10px;'><ul style='margin-left: 30px;'><li class='title'></li><li>Photos</li><li>Trailers</li></ul><div class='information'></div><div class='photos'></div><div class='trailer'></div></div>", rowdetailsheight: 350 },
-                initrowdetails: initrowdetails,
+				rowdetailstemplate: { rowdetails: "<div style='margin: 10px;'><ul style='margin-left: 30px;'><li class='title'></li><li>Photos</li><li>Trailers</li></ul><div class='information'></div><div class='photos'></div><div class='trailer'></div></div>", rowdetailsheight: 350 },
+				initrowdetails: initrowdetails,
 				theme: theme,
 				columnsresize: true,
 				autoheight: true,
 				showtoolbar: true,
 				pageable: true,
 				virtualmode: true,
-				rendergridrows: function()
-				{
-					  return dataAdapter.records;
+				rendergridrows: function () {
+					return dataAdapter.records;
 				},
 				rendertoolbar: function (toolbar) {
 					var container = $("<div style='overflow: hidden; position: relative; margin: 5px;'></div>");
 					var editrowbutton = $("<div id='editrowbutton' style='float: left; margin-left: 5px;'><img style='position: relative; margin-top: 2px;' src='../../themes_shared/images/layout/add.png'/><span style='margin-left: 4px; position: relative; top: -3px;'>Edit</span></div>");
-					var deleterowbutton = $("<div id='deleterowbutton' style='float: left; margin-left: 5px;'><img style='position: relative; margin-top: 2px;' src='../../themes_shared/images/layout/close.png'/><span style='margin-left: 4px; position: relative; top: -3px;'>Delete</span></div>");
 					container.append(editrowbutton);
-					container.append(deleterowbutton);
 					toolbar.append(container);
 					editrowbutton.jqxButton({theme: theme});
-					deleterowbutton.jqxButton({theme: theme});
 					editrowbutton.click(function () {
 						openEditWindow();
-					});
-					deleterowbutton.click(function () {
-						var selectedrowindex = nzedbgrid.jqxGrid('getselectedrowindex');
-						var id = nzedbgrid.jqxGrid('getrowid', selectedrowindex);
-						var commit = nzedbgrid.jqxGrid('deleterow', id);
 					});
 				},
 				columns: [
@@ -183,7 +160,8 @@ Select a row, click edit or double click the row to change.
 		});
 
 		$("#popupWindow").jqxWindow({
-			width: $("#contentPanel").width() - 200, isModal: true, autoOpen: false, cancelButton: $("#Cancel"), modalOpacity: 0.01
+			maxWidth: $("#contentPanel").width() -
+				50, isModal: true, autoOpen: false, resizable: true, cancelButton: $("#Cancel"), modalOpacity: 0.01
 		});
 
 		$("#Cancel").jqxButton({ theme: theme });
@@ -191,9 +169,6 @@ Select a row, click edit or double click the row to change.
 		$("#Save").click(function () {
 			$('#xxxedit').jqxValidator('validate');
 			var xxxid = $('#xxxid').val();
-			if (xxxid == ""){
-			xxxid = null;
-			}
 			var row = { id: xxxid, title: $("#title").val(), tagline: $("#tagline").val(), director: $("#director").val(),
 				actors: $("#actors").val(), directurl: $("#directurl").val(), trailers: $("#trailers").val(), plot: $("#plot").val()
 			};
@@ -205,17 +180,21 @@ Select a row, click edit or double click the row to change.
 					var commit = nzedbgrid.jqxGrid('updaterow', id, row);
 					nzedbgrid.jqxGrid('ensurerowvisible', selectedrowindex);
 				}
-			} else {
-				var commit = $('#jqxgrid').jqxGrid('addrow', null, row);
 			}
+
+			nzedbgrid.jqxGrid('updatebounddata');
 			$("#popupWindow").jqxWindow('close');
 		});
 		nzedbgrid.jqxGrid('autoresizecolumns');
 		function openEditWindow() {
-			resetEditWindow();
-				var selectedrowindex = nzedbgrid.jqxGrid('getselectedrowindex');
-				editrow = nzedbgrid.jqxGrid('getrowid', selectedrowindex);
-				var dataRecord = nzedbgrid.jqxGrid('getrowdata', editrow);
+			var selectedrowindex = nzedbgrid.jqxGrid('getselectedrowindex');
+			var rowscount = nzedbgrid.jqxGrid('getdatainformation').rowscount;
+			if (selectedrowindex >= 0 && selectedrowindex < rowscount) {
+				var id = nzedbgrid.jqxGrid('getrowid', selectedrowindex);
+				var dataRecord = nzedbgrid.jqxGrid('getrowdata', id);
+				console.log(selectedrowindex);
+				console.log(id);
+				console.log(dataRecord);
 				$("#xxxid").val(dataRecord.id);
 				$("#title").val(dataRecord.title);
 				$("#tagline").val(dataRecord.tagline);
@@ -224,7 +203,8 @@ Select a row, click edit or double click the row to change.
 				$("#actors").val(dataRecord.actors);
 				$("#directurl").val(dataRecord.directurl);
 				$("#trailers").val(dataRecord.trailers);
-				$("#popupWindow").jqxWindow('open');
+			}
+			$("#popupWindow").jqxWindow('open');
 		}
 
 		function resetEditWindow() {
@@ -240,26 +220,28 @@ Select a row, click edit or double click the row to change.
 			$("#plot").val("");
 		}
 
-		function createdropdownbox (element, url, datafields, dadapter, displaymember, valuemember, xwidth=200, yheight=25) {
-               if (url != null && datafields != null) {
-                var source =
-                {
-                    datatype: "json",
-                    datafields: datafields,
-                    id: 'id',
-                    url: url
-                };
-                var dadapter = new $.jqx.dataAdapter(source);
-			   }
-                $(element).jqxDropDownList({ selectedIndex: 0, source: dadapter, displayMember: displaymember, valueMember: valuemember, width: xwidth, height: yheight});
-                $(element).on('select', function (event) {
-                    if (event.args) {
-                        var item = event.args.item;
-                        if (item) {
+		function createdropdownbox(element, url, datafields, dadapter, displaymember, valuemember, xwidth, yheight) {
+			xwidth = xwidth || 200;
+			yheight = yheight || 25;
+			if (url != null && datafields != null) {
+				var source =
+				{
+					datatype: "json",
+					datafields: datafields,
+					id: 'id',
+					url: url
+				};
+				var dadapter = new $.jqx.dataAdapter(source);
+			}
+			$(element).jqxDropDownList({ selectedIndex: 0, source: dadapter, displayMember: displaymember, valueMember: valuemember, width: xwidth, height: yheight});
+			$(element).on('select', function (event) {
+				if (event.args) {
+					var item = event.args.item;
+					if (item) {
 						return item;
-                        }
-                    }
-                });
+					}
+				}
+			});
 		}
 
 		$('#xxxedit').jqxValidator({
@@ -267,7 +249,7 @@ Select a row, click edit or double click the row to change.
 			animationDuration: 0,
 			rules: [
 				{ input: '#title', message: 'A title is required', action: 'keyup, blur', rule: 'required' }
-				],
+			],
 			theme: theme
 		});
 	});
@@ -278,43 +260,43 @@ Select a row, click edit or double click the row to change.
 	<div>Edit</div>
 	<div style="overflow: hidden;">
 		<form id="xxxedit" action="./">
-		<table>
-			<tr>
-				<input type="hidden" id="xxxid" />
-				<td align="right">Title:</td>
-				<td align="left"><input id="title" /></td>
-			</tr>
-			<tr>
-				<td align="right">Tagline:</td>
-				<td align="left"><textarea id="tagline"></textarea></td>
-			</tr>
-			<tr>
-				<td align="right">Plot:</td>
-				<td align="left"><textarea id="plot"></textarea></td>
-			</tr>
-			<tr>
-				<td align="right">Director:</td>
-				<td align="left"><input id="director" /></td>
-			</tr>
-			<tr>
-				<td align="right">Actors:</td>
-				<td align="left"><input id="actors" /></td>
-			</tr>
-			<tr>
-				<td align="right">Direct Url:</td>
-				<td align="left"><input id="directurl" /></td>
-			</tr>
-			<tr>
-				<td align="right">Trailer Url:</td>
-				<td align="left"><input id="trailers" /></td>
-			</tr>
-			<tr>
-				<td align="right"></td>
-				<td style="padding-top: 10px;" align="right">
-					<input style="margin-right: 5px;" type="button" id="Save" value="Save" />
-					<input id="Cancel" type="button" value="Cancel" /></td>
-			</tr>
-		</table>
+					<input type="hidden" id="xxxid" />
+			<table>
+				<tr>
+					<td align="right">Title:</td>
+					<td align="left"><input id="title" /></td>
+				</tr>
+				<tr>
+					<td align="right">Tagline:</td>
+					<td align="left"><textarea id="tagline"></textarea></td>
+				</tr>
+				<tr>
+					<td align="right">Plot:</td>
+					<td align="left"><textarea id="plot"></textarea></td>
+				</tr>
+				<tr>
+					<td align="right">Director:</td>
+					<td align="left"><input id="director" /></td>
+				</tr>
+				<tr>
+					<td align="right">Actors:</td>
+					<td align="left"><input id="actors" /></td>
+				</tr>
+				<tr>
+					<td align="right">Direct Url:</td>
+					<td align="left"><input id="directurl" /></td>
+				</tr>
+				<tr>
+					<td align="right">Trailer Url:</td>
+					<td align="left"><input id="trailers" /></td>
+				</tr>
+				<tr>
+					<td align="right"></td>
+					<td style="padding-top: 10px;" align="right">
+						<input style="margin-right: 5px;" type="button" id="Save" value="Save" />
+						<input id="Cancel" type="button" value="Cancel" /></td>
+				</tr>
+			</table>
 		</form>
 	</div>
 </div>

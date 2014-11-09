@@ -142,7 +142,7 @@ function getTheme() {
     }
 
     var theme = window.location.toString().substring(5 + themestart);
-    var url = "/admin/../themes_shared/styles/layout/jqx." + theme + '.css';
+    var url = "../themes_shared/styles/layout/jqx." + theme + '.css';
 
     if (document.createStyleSheet != undefined) {
         var hasStyle = false;
@@ -183,4 +183,5 @@ try
 }
 catch (error) {
     var er = error;
+	console.log(er);
 }

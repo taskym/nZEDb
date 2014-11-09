@@ -54,14 +54,13 @@
 		{/if}
 		{literal}
 		<script type="text/javascript">
-			var WWW_TOP = "{$smarty.const.WWW_TOP}/..";
+			var WWW_TOP = {/literal}"{$smarty.const.WWW_TOP}"{literal} + "/..";
 			$(document).ready(function () {
 				initthemes("/admin/../themes_shared/styles/layout/jqx.");
 				$("#mainbody").attr('class', theme);
 				$("#adminMenu").jqxMenu({ theme: theme, showTopLevelArrows: true, width: '100%', height: '30px'});
                 $("#adminMenu").css('visibility', 'visible');
 				$("#adminMenu").css('position', 'absolute');
-				console.log(location.pathname);
 				if (location.pathname == "/admin/site-edit.php" || location.pathname == "/admin/tmux-edit.php") {
 				$("#jumpbox").jqxDropDownList({selectedIndex: 0, theme: theme});
 				$("#jumpbox").jqxDropDownList('loadFromSelect', 'select');

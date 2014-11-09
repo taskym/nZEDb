@@ -38,13 +38,7 @@ if (isset($_GET['action'])) {
 				'TotalRows' => $xxxcount,
 				'results' => $xxxmovielist
 			);
-			echo json_encode($data);
-			break;
-		case "delete":
-			$id = (int)$_GET['id'];
-			$bin->deleteBlacklist($id);
-			$returnData = json_encode(array("success" => true, "id" => $id));
-			print ($returnData);
+			print json_encode($data);
 			break;
 		case "update":
 			$id = (int)$_GET['id'];
@@ -52,15 +46,8 @@ if (isset($_GET['action'])) {
 			$returnData = json_encode(array("success" => true, "id" => $id));
 			print($returnData);
 			break;
-		case "add":
-			$id = $bin->addBlacklist($_POST);
-			$gridRowID = $_GET['rowid'];
-			$returnData = json_encode(array("id" => $id, "rowid" => $gridRowID));
-			print ($returnData);
-			break;
 		default:
 			print "Error: No Command Given";
 	}
-	exit;
 }
 
