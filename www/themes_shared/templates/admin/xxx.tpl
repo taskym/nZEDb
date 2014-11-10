@@ -134,8 +134,9 @@
 				showtoolbar: true,
 				pageable: true,
 				virtualmode: true,
-				rendergridrows: function () {
-					return dataAdapter.records;
+				rendergridrows: function (obj) {
+					console.log(obj.data);
+					return obj.data;
 				},
 				rendertoolbar: function (toolbar) {
 					var container = $("<div style='overflow: hidden; position: relative; margin: 5px;'></div>");

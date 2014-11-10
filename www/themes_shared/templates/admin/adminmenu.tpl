@@ -6,7 +6,7 @@
 			<ul>
 				<li><a href="{$smarty.const.WWW_TOP}/binaryblacklist.php">Blacklists</a></li>
 				<li><a href="{$smarty.const.WWW_TOP}/content-list.php">Content Page(s)</a></li>
-				<li><a href="{$smarty.const.WWW_TOP}/category-list.php?action=add">Categories</a></li>
+				<li><a href="{$smarty.const.WWW_TOP}/categories.php">Categories</a></li>
 				<li><a href="{$smarty.const.WWW_TOP}/site-edit.php">Site Settings</a></li>
 				<li><a href="{$smarty.const.WWW_TOP}/group-list.php">Groups</a></li>
 				<li><a href="{$smarty.const.WWW_TOP}/menu-list.php"> Menu</a></li>

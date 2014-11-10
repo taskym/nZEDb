@@ -6,12 +6,15 @@ $category = new Category(['Settings' => $page->settings]);
 $id = 0;
 
 // Set the current action.
-$action = isset($_REQUEST['action']) ? $_REQUEST['action'] : 'view';
+$action = isset($_REQUEST['action']) ? $_REQUEST['action'] : 'list';
 
 switch($action) {
+	case 'list':
+	$returnData = $category->getFlat();
+	print (json_encode($returnData));
+	break;
 	case 'submit':
 		$ret = $category->update($_POST["id"], $_POST["status"], $_POST["description"], $_POST["disablepreview"], $_POST["minsize"]);
-		header("Location:".WWW_TOP."/category-list.php");
 		break;
 
 	case 'view':
@@ -24,9 +27,3 @@ switch($action) {
 		}
 		break;
 }
-
-$page->smarty->assign('status_ids', array(Category::STATUS_ACTIVE,Category::STATUS_INACTIVE,Category::STATUS_DISABLED));
-$page->smarty->assign('status_names', array( 'Yes', 'No', 'Disabled'));
-
-$page->content = $page->smarty->fetch('category-edit.tpl');
-$page->render();
