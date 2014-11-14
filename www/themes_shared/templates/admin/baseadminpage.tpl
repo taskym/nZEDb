@@ -16,6 +16,7 @@
 		<script type="text/javascript" src="{$smarty.const.WWW_TOP}/../themes_shared/scripts/layout/themestyles.js"></script>
 		<script type="text/javascript" src="{$smarty.const.WWW_TOP}/../themes_shared/scripts/layout/jqxcore.js"></script>
 		<script type="text/javascript" src="{$smarty.const.WWW_TOP}/../themes_shared/scripts/layout/jqx-all.js"></script>
+		<script type="text/javascript" src="{$smarty.const.WWW_TOP}/../themes_shared/scripts/layout/models.js"></script>
 		{literal}
 			<style type="text/css">
 			html, body {
