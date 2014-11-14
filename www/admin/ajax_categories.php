@@ -10,20 +10,13 @@ $action = isset($_REQUEST['action']) ? $_REQUEST['action'] : 'list';
 
 switch($action) {
 	case 'list':
-	$returnData = $category->getFlat();
-	print (json_encode($returnData));
+		$returnData = json_encode($category->getFlat());
 	break;
-	case 'submit':
-		$ret = $category->update($_POST["id"], $_POST["status"], $_POST["description"], $_POST["disablepreview"], $_POST["minsize"]);
-		break;
-
-	case 'view':
-	default:
-		if (isset($_GET["id"])) {
-			$page->title = "Category Edit";
-			$id = $_GET["id"];
-			$cat = $category->getByID($id);
-			$page->smarty->assign('category', $cat);
-		}
-		break;
+	case 'edit':
+		$status = $_POST['status'] == "true" ? 1 : 0;
+		$disablepreview = $_POST['disablepreview'] == "true" ? 1 : 0;
+		$ret = $category->update($_POST["id"], $status, $_POST["description"], $disablepreview, $_POST["minsize"]);
+		$returnData = json_encode(["success" => true, "message" => "Category Saved.."]);
+	break;
 }
+print($returnData);
