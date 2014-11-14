@@ -4,7 +4,6 @@
 	matched into an appropriate category. Disable preview prevents ffmpeg being used for releases in
 	the category.
 </p>
-<div><span id="message"></span></div>
 {literal}
 	<script type="text/javascript">
 		$(document).ready(function () {
@@ -118,10 +117,7 @@
 	</script>
 	<div id='data'>
 		<div style="margin-bottom: 10px;">
-			<input id="updateButton"
-				type="button"
-				data-bind="click: updateItem, jqxButton: {}"
-				value="Update Item" />
+		<span id="message"></span>
 		</div>
 		<div data-bind="jqxGrid: {disabled: disabled}" id="nZEDbGrid">
 		</div>
