@@ -9,6 +9,45 @@
 		$(document).ready(function () {
 			var gridelement = "#nZEDbGrid";
 			var url = "ajax_categories.php";
+			var nZEDbGridModel = function () {
+		this.items = ko.observableArray();
+		this.disabled = ko.observable(false);
+		var me = this;
+		$.ajax({
+			datatype: 'json',
+			url: url + '?action=list'
+		}).done(function (data) {
+			var jsonData = $.parseJSON(data);
+			me.items(jsonData);
+		});
+		this.updateItem = function (rowid, rowdata) {
+			$(gridelement).jqxGrid({disabled: true});
+			if (rowid != null && rowid != "") {
+				var rowscount = $(gridelement).jqxGrid('getdatainformation').rowscount;
+				if (rowid >= 0 && rowid < rowscount) {
+					try {
+						$.ajax({
+							datatype: 'json',
+							url: url + "?action=edit",
+							data: rowdata,
+							type: 'POST'
+						}).done(function (data) {
+							if (data.success) {
+								$("#message").html(data.message);
+								$(gridelement).jqxGrid('updatebounddata');
+							}
+						});
+					}
+					catch (e) {
+						console.log(e);
+					}
+				}
+			}
+
+			$(gridelement).jqxGrid({disabled: false});
+		};
+	};
+
 			var model = new nZEDbGridModel();
 			var source = {
 				localdata: model.items,

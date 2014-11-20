@@ -11,12 +11,13 @@
 		<link rel="shortcut icon" href="{$smarty.const.WWW_TOP}/../themes_shared/images/favicon.ico">
 		<link rel="stylesheet" href="{$smarty.const.WWW_TOP}/../themes_shared/styles/layout/jqx.base.css" type="text/css" />
 		<script type="text/javascript" src="{$smarty.const.WWW_TOP}/../themes_shared/scripts/jquery-2.0.2.min.js"></script>
-		<script type="text/javascript" src="{$smarty.const.WWW_TOP}/../themes_shared/scripts/layout/knockout-3.2.0.js"></script>
-		<script type="text/javascript" src="{$smarty.const.WWW_TOP}/../themes_shared/scripts/layout/jqxknockout.js"></script>
+		<script type="text/javascript" src="{$smarty.const.WWW_TOP}/../themes_shared/scripts/layout/angular.js"></script>
 		<script type="text/javascript" src="{$smarty.const.WWW_TOP}/../themes_shared/scripts/layout/themestyles.js"></script>
 		<script type="text/javascript" src="{$smarty.const.WWW_TOP}/../themes_shared/scripts/layout/jqxcore.js"></script>
 		<script type="text/javascript" src="{$smarty.const.WWW_TOP}/../themes_shared/scripts/layout/jqx-all.js"></script>
-		<script type="text/javascript" src="{$smarty.const.WWW_TOP}/../themes_shared/scripts/layout/models.js"></script>
+		<script type="text/javascript" src="{$smarty.const.WWW_TOP}/../themes_shared/scripts/layout/jqxangular.js"></script>
+		<script type="text/javascript">
+		</script>
 		{literal}
 			<style type="text/css">
 			html, body {

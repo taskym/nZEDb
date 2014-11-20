@@ -6,28 +6,21 @@ $tmux = new Tmux();
 $id = 0;
 
 // Set the current action.
-$action = isset($_REQUEST['action']) ? $_REQUEST['action'] : 'view';
+$action = $_REQUEST['action'];
 
 switch($action) {
 	case 'submit':
-		$error = "";
-		$ret = $tmux->update($_POST);
-		$page->title = "Tmux Settings Edit";
-		$settings = $tmux->get();
-		$page->smarty->assign('ftmux', $settings);
+		//$ret = $tmux->update(json_decode($_POST));
+		print (json_encode(array("success" => true, "message" => "Tmux Settings Saved")));
 		break;
-
 	case 'view':
+		$settings = $tmux->get();
+		print (json_encode($settings));
+		break;
 	default:
 		$page->title = "Tmux Settings Edit";
-		$settings = $tmux->get();
-		$page->smarty->assign('ftmux', $settings);
-		break;
-}
-
-$page->smarty->assign('yesno_ids', array(1, 0));
+		$page->smarty->assign('yesno_ids', array(1, 0));
 $page->smarty->assign('yesno_names', array('yes', 'no'));
-
 $page->smarty->assign('backfill_ids', array(0,4,2,1));
 $page->smarty->assign('backfill_names', array('Disabled', 'Safe', 'Group', 'All'));
 $page->smarty->assign('backfill_group_ids', array(1,2,3,4,5,6));
@@ -54,4 +47,7 @@ $page->smarty->assign('post_non_ids', array(0,1,2));
 $page->smarty->assign('post_non_names', array('Disabled', 'All Available Releases', 'Properly Renamed Releases'));
 
 $page->content = $page->smarty->fetch('tmux-edit.tpl');
-$page->render();
+
+		$page->render();
+		//$page->smarty->assign('ftmux', $settings);
+}
