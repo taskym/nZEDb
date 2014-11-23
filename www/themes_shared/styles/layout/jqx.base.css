@@ -4434,3 +4434,9 @@ ol li .jqx-listmenu-item-label:before
     left: -11px;
     background-position: left top;
 }
+
+div.hint, div.hint a {
+    font-size: 0.9em;
+    font-style: italic;
+    color: #999;
+}
