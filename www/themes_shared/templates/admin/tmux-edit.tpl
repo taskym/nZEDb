@@ -32,7 +32,7 @@
 	<div class="error">{$error}</div>
 {/if}
 {literal}
-<div ng-app="adminTmux" ng-controller="tmuxController">
+<div ng-controller="tmuxController">
 <form id="tmuxform">
 <jqx-navigation-bar>
 		<div><span>Tmux How It Works</span></div>
@@ -79,8 +79,6 @@
 				<td>
 					<jqx-radio-button jqx-create="createWidget" jqx-group-name="'running'" value="1" ng-model="tmuxsettings.running">Yes</jqx-radio-button>
             		<jqx-radio-button jqx-create="createWidget" jqx-group-name="'running'" value="0" ng-model="tmuxsettings.running">No</jqx-radio-button>
-           	 		<br />
-					<br />
 					<div class="hint">This is the shutdown, true/on, it runs, false/off and all
 									  scripts are terminated. This
 									  will start/stop all panes without terminating the monitor
@@ -93,7 +91,7 @@
 			<tr>
 				<td style="width:180px;"><label for="monitor_delay">Monitor Loop Timer:</label></td>
 				<td>
-					<jqx-input jqx-create="createWidget" jqx-source="tmuxsettings" jqx-create="createWidget" id="monitor_delay" name="monitor_delay" type="text" ng-model="tmuxsettings.monitor_delay"></jqx-input>
+					<jqx-input jqx-create="createWidget" jqx-source="tmuxsettings" name="monitor_delay" ng-model="tmuxsettings.monitor_delay"></jqx-input>
 
 					<div class="hint">The time between query refreshes of monitor information, in
 									  seconds. This has no
@@ -112,7 +110,7 @@
 			<tr>
 				<td style="width:180px;"><label for="tmux_session">Tmux Session:</label></td>
 				<td>
-					<jqx-input jqx-create="createWidget" id="tmux_session" name="tmux_session" type="text" ng-model="tmuxsettings.tmux_session"></jqx-input>
+					<jqx-input jqx-create="createWidget" name="tmux_session" ng-model="tmuxsettings.tmux_session"></jqx-input>
 
 					<div class="hint">Enter the session name to be used by tmux, no spaces allowed
 									  in the name, this can't
@@ -125,9 +123,9 @@
 			<tr>
 				<td style="width:180px;"><label for="monitor_path">Monitor a Ramdisk:</label></td>
 				<td>
-					<jqx-input jqx-create="createWidget" id="monitor_path" name="monitor_path" class="long" type="text" ng-model="tmuxsettings.monitor_path"></jqx-input> <br />
-					<jqx-input jqx-create="createWidget" id="monitor_path_a" name="monitor_path_a" class="long" type="text" ng-model="tmuxsettings.monitor_path_a"></jqx-input> <br />
-					<jqx-input jqx-create="createWidget" id="monitor_path_b" name="monitor_path_b" class="long" type="text" ng-model="tmuxsettings.monitor_path_b"></jqx-input> <br />
+					<jqx-input jqx-create="createWidget" name="monitor_path" ng-model="tmuxsettings.monitor_path"></jqx-input> <br />
+					<jqx-input jqx-create="createWidget" name="monitor_path_a" ng-model="tmuxsettings.monitor_path_a"></jqx-input> <br />
+					<jqx-input jqx-create="createWidget" name="monitor_path_b" ng-model="tmuxsettings.monitor_path_b"></jqx-input> <br />
 
 					<div class="hint">Enter a path here to have Monitor monitor its usage and free
 									  space. Must be a valid
@@ -203,7 +201,7 @@
 				</td>
 			</tr>
 			<tr>
-				<td colspan="2" align="center"><jqx-button jqx-on-click="onClick(event)" ng-disabled="checked" jqx-data="buttonData" jqx-settings="buttonsettings"><span>{{data.text}}</span></jqx-button></td>
+				<td colspan="2" align="center"><jqx-button jqx-on-click="SaveClick(event)" ng-disabled="savedisabled" jqx-data="buttonData" jqx-settings="buttonsettings"><span>{{data.text}}</span></jqx-button></td>
 			</tr>
 		</table>
 	</div>
@@ -249,7 +247,7 @@
 					</td>
 				</tr>
 				<tr>
-					<td colspan="2" align="center"><jqx-button jqx-on-click="onClick(event)" ng-disabled="checked" jqx-data="buttonData" jqx-settings="buttonsettings"><span>{{data.text}}</span></jqx-button></td>
+					<td colspan="2" align="center"><jqx-button jqx-on-click="saveTmux(event)" ng-disabled="saveDisabled" jqx-data="buttonData" jqx-settings="buttonsettings"><span>{{data.text}}</span></jqx-button></td>
 				</tr>
 			</table>
 		</div>
@@ -284,7 +282,7 @@
 					</td>
 				</tr>
 				<tr>
-					<td colspan="2" align="center"><jqx-button jqx-on-click="onClick(event)" ng-disabled="checked" jqx-data="buttonData" jqx-settings="buttonsettings"><span>{{data.text}}</span></jqx-button></td>
+					<td colspan="2" align="center"><jqx-button jqx-on-click="saveTmux(event)" ng-disabled="saveDisabled" jqx-data="buttonData" jqx-settings="buttonsettings"><span>{{data.text}}</span></jqx-button></td>
 				</tr>
 			</table>
 		</div>
@@ -294,7 +292,7 @@
 				<tr>
 					<td style="width:180px;"><label for="backfill">Backfill:</label></td>
 					<td>
-<jqx-drop-down-list ng-model="selectedValue" jqx-ng-model jqx-settings="backfillGroupSettings"></jqx-drop-down-list>
+<jqx-drop-down-list jqx-ng-model jqx-settings="backfillGroupSettings"></jqx-drop-down-list>
 						{html_options id="backfill" name='backfill' values=$backfill_ids output=$backfill_names selected=$ftmux->backfill}
 						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{html_options style="width:180px;" class="siteeditstyle" id="backfill_order" name='backfill_order' values=$backfill_group_ids output=$backfill_group selected=$ftmux->backfill_order}
 						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{html_options style="width:180px;" class="siteeditstyle" id="backfill_days" name='backfill_days' values=$backfill_days_ids output=$backfill_days selected=$ftmux->backfill_days}
@@ -389,7 +387,17 @@
 					<td style="width:180px;"><label for="progressive">Variable Sleep Timer:</label>
 					</td>
 					<td>
-						{html_radios id="progressive" name='progressive' values=$yesno_ids output=$yesno_names selected=$ftmux->progressive separator='<br />'}
+
+						<jqx-radio-button jqx-create="createWidget"
+							jqx-group-name="'progressive'"
+							value="1"
+							ng-model="tmuxsettings.progressive">Yes
+						</jqx-radio-button>
+						<jqx-radio-button jqx-create="createWidget"
+							jqx-group-name="'progressive'"
+							value="0"
+							ng-model="tmuxsettings.progressive">No
+						</jqx-radio-button>
 						<div class="hint">This will vary the backfill sleep depending on how many
 										  collections you have.<br />ie
 										  50k collections would make sleep timer 100 seconds and 20k
@@ -399,7 +407,7 @@
 					</td>
 				</tr>
 				<tr>
-					<td colspan="2" align="center"><jqx-button jqx-on-click="onClick(event)" ng-disabled="checked" jqx-data="buttonData" jqx-settings="buttonsettings"><span>{{data.text}}</span></jqx-button></td>
+					<td colspan="2" align="center"><jqx-button jqx-on-click="saveTmux(event)" ng-disabled="saveDisabled" jqx-data="buttonData" jqx-settings="buttonsettings"><span>{{data.text}}</span></jqx-button></td>
 				</tr>
 			</table>
 		</div>
@@ -462,7 +470,7 @@
 					</td>
 				</tr>
 				<tr>
-					<td colspan="2" align="center"><jqx-button jqx-on-click="onClick(event)" ng-disabled="checked" jqx-data="buttonData" jqx-settings="buttonsettings"><span>{{data.text}}</span></jqx-button></td>
+					<td colspan="2" align="center"><jqx-button jqx-on-click="saveTmux(event)" ng-disabled="saveDisabled" jqx-data="buttonData" jqx-settings="buttonsettings"><span>{{data.text}}</span></jqx-button></td>
 				</tr>
 			</table>
 			</div>
@@ -500,7 +508,7 @@
 					</td>
 				</tr>
 				<tr>
-					<td colspan="2" align="center"><jqx-button jqx-on-click="onClick(event)" ng-disabled="checked" jqx-data="buttonData" jqx-settings="buttonsettings"><span>{{data.text}}</span></jqx-button></td>
+					<td colspan="2" align="center"><jqx-button jqx-on-click="saveTmux(event)" ng-disabled="saveDisabled" jqx-data="buttonData" jqx-settings="buttonsettings"><span>{{data.text}}</span></jqx-button></td>
 				</tr>
 			</table>
 		</div>
@@ -550,7 +558,17 @@
 					<td style="width:180px;"><label for="post_amazon">Postprocess Amazon:</label>
 					</td>
 					<td>
-						{html_radios id="post_amazon" name='post_amazon' values=$yesno_ids output=$yesno_names selected=$ftmux->post_amazon separator='<br />'}
+
+						<jqx-radio-button jqx-create="createWidget"
+							jqx-group-name="'post_amazon'"
+							value="1"
+							ng-model="tmuxsettings.post_amazon">Yes
+						</jqx-radio-button>
+						<jqx-radio-button jqx-create="createWidget"
+							jqx-group-name="'post_amazon'"
+							value="0"
+							ng-model="tmuxsettings.post_amazon">No
+						</jqx-radio-button>
 						<div class="hint">Choose to do books, music and games lookups true/false
 						</div>
 					</td>
@@ -592,7 +610,7 @@
 					</td>
 				</tr>
 				<tr>
-					<td colspan="2" align="center"><jqx-button jqx-on-click="onClick(event)" ng-disabled="checked" jqx-data="buttonData" jqx-settings="buttonsettings"><span>{{data.text}}</span></jqx-button></td>
+					<td colspan="2" align="center"><jqx-button jqx-on-click="saveTmux(event)" ng-disabled="saveDisabled" jqx-data="buttonData" jqx-settings="buttonsettings"><span>{{data.text}}</span></jqx-button></td>
 				</tr>
 			</table>
 		</div>
@@ -601,8 +619,17 @@
 				<tr>
 					<td style="width:180px;"><label for="run_sharing">Comment Sharing :</label></td>
 					<td>
-						{html_radios id="run_sharing" name='run_sharing' values=$yesno_ids output=$yesno_names
-						selected=$ftmux->run_sharing separator='<br />'}
+
+						<jqx-radio-button jqx-create="createWidget"
+							jqx-group-name="'run_sharing'"
+							value="1"
+							ng-model="tmuxsettings.run_sharing">Yes
+						</jqx-radio-button>
+						<jqx-radio-button jqx-create="createWidget"
+							jqx-group-name="'run_sharing'"
+							value="0"
+							ng-model="tmuxsettings.run_sharing">No
+						</jqx-radio-button>
 						<div class="hint">Run Comment Sharing from within tmux if you have it
 										  enabled in Admin->Sharing
 										  Settings.
@@ -620,7 +647,7 @@
 					</td>
 				</tr>
 				<tr>
-					<td colspan="2" align="center"><jqx-button jqx-on-click="onClick(event)" ng-disabled="checked" jqx-data="buttonData" jqx-settings="buttonsettings"><span>{{data.text}}</span></jqx-button></td>
+					<td colspan="2" align="center"><jqx-button jqx-on-click="saveTmux(event)" ng-disabled="saveDisabled" jqx-data="buttonData" jqx-settings="buttonsettings"><span>{{data.text}}</span></jqx-button></td>
 				</tr>
 			</table>
 		</div>
@@ -629,7 +656,17 @@
 				<tr>
 					<td style="width:180px;"><label for="fix_names">Fix Release Names:</label></td>
 					<td>
-						{html_radios id="fix_names" name='fix_names' values=$yesno_ids output=$yesno_names selected=$ftmux->fix_names separator='<br />'}
+
+						<jqx-radio-button jqx-create="createWidget"
+							jqx-group-name="'fix_names'"
+							value="1"
+							ng-model="tmuxsettings.fix_names">Yes
+						</jqx-radio-button>
+						<jqx-radio-button jqx-create="createWidget"
+							jqx-group-name="'fix_names'"
+							value="0"
+							ng-model="tmuxsettings.fix_names">No
+						</jqx-radio-button>
 						<div class="hint">Choose to try to fix Releases Names using NFOs, par2
 										  files, filenames, md5 and misc
 										  sorter. true/false
@@ -652,7 +689,7 @@
 					</td>
 				</tr>
 				<tr>
-					<td colspan="2" align="center"><jqx-button jqx-on-click="onClick(event)" ng-disabled="checked" jqx-data="buttonData" jqx-settings="buttonsettings"><span>{{data.text}}</span></jqx-button></td>
+					<td colspan="2" align="center"><jqx-button jqx-on-click="saveTmux(event)" ng-disabled="saveDisabled" jqx-data="buttonData" jqx-settings="buttonsettings"><span>{{data.text}}</span></jqx-button></td>
 				</tr>
 			</table>
 		</div>
@@ -692,7 +729,7 @@
 					</td>
 				</tr>
 				<tr>
-					<td colspan="2" align="center"><jqx-button jqx-on-click="onClick(event)" ng-disabled="checked" jqx-data="buttonData" jqx-settings="buttonsettings"><span>{{data.text}}</span></jqx-button></td>
+					<td colspan="2" align="center"><jqx-button jqx-on-click="saveTmux(event)" ng-disabled="saveDisabled" jqx-data="buttonData" jqx-settings="buttonsettings"><span>{{data.text}}</span></jqx-button></td>
 				</tr>
 			</table>
 		</div>
@@ -745,7 +782,17 @@
 					<td style="width:180px;"><label for="update_tv">Update TV and Theater
 																	Schedules:</label></td>
 					<td>
-						{html_radios id="update_tv" name='update_tv' values=$yesno_ids output=$yesno_names selected=$ftmux->update_tv separator='<br />'}
+
+						<jqx-radio-button jqx-create="createWidget"
+							jqx-group-name="'update_tv'"
+							value="1"
+							ng-model="tmuxsettings.update_tv">Yes
+						</jqx-radio-button>
+						<jqx-radio-button jqx-create="createWidget"
+							jqx-group-name="'update_tv'"
+							value="0"
+							ng-model="tmuxsettings.update_tv">No
+						</jqx-radio-button>
 						<div class="hint">Choose to run Update TV and Theater Schedules true/false
 						</div>
 					</td>
@@ -767,7 +814,7 @@
 					</td>
 				</tr>
 				<tr>
-					<td colspan="2" align="center"><jqx-button jqx-on-click="onClick(event)" ng-disabled="checked" jqx-data="buttonData" jqx-settings="buttonsettings"><span>{{data.text}}</span></jqx-button></td>
+					<td colspan="2" align="center"><jqx-button jqx-on-click="saveTmux(event)" ng-disabled="saveDisabled" jqx-data="buttonData" jqx-settings="buttonsettings"><span>{{data.text}}</span></jqx-button></td>
 				</tr>
 			</table>
 		</div>
@@ -777,8 +824,17 @@
 					<td style="width:180px;"><label for="run_ircscraper">Enable IRCScraper:</label>
 					</td>
 					<td>
-						{html_radios id="run_ircscraper" name='run_ircscraper' values=$yesno_ids output=$yesno_names
-						selected=$ftmux->run_ircscraper separator='<br />'}
+
+						<jqx-radio-button jqx-create="createWidget"
+							jqx-group-name="'run_ircscraper'"
+							value="1"
+							ng-model="tmuxsettings.run_ircscraper">Yes
+						</jqx-radio-button>
+						<jqx-radio-button jqx-create="createWidget"
+							jqx-group-name="'run_ircscraper'"
+							value="0"
+							ng-model="tmuxsettings.run_ircscraper">No
+						</jqx-radio-button>
 						<div class="hint">Enable IRCScraper. The pane for this can not be created
 										  after tmux starts.
 						</div>
@@ -798,7 +854,7 @@
 					</td>
 				</tr>
 				<tr>
-					<td colspan="2" align="center"><jqx-button jqx-on-click="onClick(event)" ng-disabled="checked" jqx-data="buttonData" jqx-settings="buttonsettings"><span>{{data.text}}</span></jqx-button></td>
+					<td colspan="2" align="center"><jqx-button jqx-on-click="saveTmux(event)" ng-disabled="saveDisabled" jqx-data="buttonData" jqx-settings="buttonsettings"><span>{{data.text}}</span></jqx-button></td>
 				</tr>
 			</table>
 		</div>
@@ -854,7 +910,17 @@
 				<tr>
 					<td style="width:180px;"><label for="write_logs">Logging:</label></td>
 					<td>
-						{html_radios id="write_logs" name='write_logs' values=$yesno_ids output=$yesno_names selected=$ftmux->write_logs separator='<br />'}
+
+						<jqx-radio-button jqx-create="createWidget"
+							jqx-group-name="'write_logs'"
+							value="1"
+							ng-model="tmuxsettings.write_logs">Yes
+						</jqx-radio-button>
+						<jqx-radio-button jqx-create="createWidget"
+							jqx-group-name="'write_logs'"
+							value="0"
+							ng-model="tmuxsettings.write_logs">No
+						</jqx-radio-button>
 						<div class="hint">Set this to write each panes output to a per pane per day
 										  log file. This adds GMT date
 										  to the filename.
@@ -865,7 +931,17 @@
 					<td style="width:180px;"><label for="powerline">Powerline Status Bar:</label>
 					</td>
 					<td>
-						{html_radios id="powerline" name='powerline' values=$yesno_ids output=$yesno_names selected=$ftmux->powerline separator='<br />'}
+
+						<jqx-radio-button jqx-create="createWidget"
+							jqx-group-name="'powerline'"
+							value="1"
+							ng-model="tmuxsettings.powerline">Yes
+						</jqx-radio-button>
+						<jqx-radio-button jqx-create="createWidget"
+							jqx-group-name="'powerline'"
+							value="0"
+							ng-model="tmuxsettings.powerline">No
+						</jqx-radio-button>
 						<div class="hint">Choose to use the Powerline tmux status bar. To make this
 										  pretty, you need to install
 										  a patched font. This can be found on
@@ -881,7 +957,7 @@
 					</td>
 				</tr>
 				<tr>
-					<td colspan="2" align="center"><jqx-button jqx-on-click="onClick(event)" ng-disabled="checked" jqx-data="buttonData" jqx-settings="buttonsettings"><span>{{data.text}}</span></jqx-button></td>
+					<td colspan="2" align="center"><jqx-button jqx-on-click="saveTmux(event)" ng-disabled="saveDisabled" jqx-data="buttonData" jqx-settings="buttonsettings"><span>{{data.text}}</span></jqx-button></td>
 				</tr>
 			</table>
 		</div>
@@ -891,7 +967,17 @@
 					<td style="width:180px;"><label for="showquery">Display Query Times:</label>
 					</td>
 					<td>
-						{html_radios id="showquery" name='showquery' values=$yesno_ids output=$yesno_names selected=$ftmux->showquery separator='<br />'}
+
+						<jqx-radio-button jqx-create="createWidget"
+							jqx-group-name="'showquery'"
+							value="1"
+							ng-model="tmuxsettings.showquery">Yes
+						</jqx-radio-button>
+						<jqx-radio-button jqx-create="createWidget"
+							jqx-group-name="'showquery'"
+							value="0"
+							ng-model="tmuxsettings.showquery">No
+						</jqx-radio-button>
 						<div class="hint">Choose to display the query times for each set of queries.
 										  true/false.
 						</div>
@@ -900,7 +986,17 @@
 				<tr>
 					<td style="width:180px;"><label for="htop">htop:</label></td>
 					<td>
-						{html_radios id="htop" name='htop' values=$yesno_ids output=$yesno_names selected=$ftmux->htop separator='<br />'}
+
+						<jqx-radio-button jqx-create="createWidget"
+							jqx-group-name="'htop'"
+							value="1"
+							ng-model="tmuxsettings.htop">Yes
+						</jqx-radio-button>
+						<jqx-radio-button jqx-create="createWidget"
+							jqx-group-name="'htop'"
+							value="0"
+							ng-model="tmuxsettings.htop">No
+						</jqx-radio-button>
 						<div class="hint">htop - an interactive process viewer for Linux. The pane
 										  for this can not be created
 										  after tmux starts.
@@ -910,7 +1006,17 @@
 				<tr>
 					<td style="width:180px;"><label for="nmon">nmon:</label></td>
 					<td>
-						{html_radios id="nmon" name='nmon' values=$yesno_ids output=$yesno_names selected=$ftmux->nmon separator='<br />'}
+
+						<jqx-radio-button jqx-create="createWidget"
+							jqx-group-name="'nmon'"
+							value="1"
+							ng-model="tmuxsettings.nmon">Yes
+						</jqx-radio-button>
+						<jqx-radio-button jqx-create="createWidget"
+							jqx-group-name="'nmon'"
+							value="0"
+							ng-model="tmuxsettings.nmon">No
+						</jqx-radio-button>
 						<div class="hint">nmon is short for Nigel's performance Monitor for Linux.
 										  The pane for this can not be
 										  created after tmux starts.
@@ -920,7 +1026,16 @@
 				<tr>
 					<td style="width:180px;"><label for="vnstat">vnstat:</label></td>
 					<td>
-						{html_radios id="vnstat" name='vnstat' values=$yesno_ids output=$yesno_names selected=$ftmux->vnstat separator='<br />'}
+						<jqx-radio-button jqx-create="createWidget"
+							jqx-group-name="'vnstat'"
+							value="1"
+							ng-model="tmuxsettings.vnstat">Yes
+						</jqx-radio-button>
+						<jqx-radio-button jqx-create="createWidget"
+							jqx-group-name="'vnstat'"
+							value="0"
+							ng-model="tmuxsettings.vnstat">No
+						</jqx-radio-button>
 						<jqx-input jqx-create="createWidget" id="vnstat_ARGS"
 							name="vnstat_ARGS"
 							class="text"
@@ -939,8 +1054,16 @@
 				<tr>
 					<td style="width:180px;"><label for="tcptrack">tcptrack:</label></td>
 					<td>
-						{html_radios id="tcptrack" name='tcptrack' values=$yesno_ids output=$yesno_names selected=$ftmux->tcptrack separator='<br />'}
-						<jqx-input jqx-create="createWidget" id="tcptrack_args" name="tcptrack_args" class="text" type="text"
+						<jqx-radio-button jqx-create="createWidget"
+							jqx-group-name="'tcptrack'"
+							value="1"
+							ng-model="tmuxsettings.tcptrack">Yes
+						</jqx-radio-button>
+						<jqx-radio-button jqx-create="createWidget"
+							jqx-group-name="'tcptrack'"
+							value="0"
+							ng-model="tmuxsettings.tcptrack">No
+						</jqx-radio-button><jqx-input jqx-create="createWidget" id="tcptrack_args" name="tcptrack_args" class="text" type="text"
 							ng-model="tmuxsettings.tcptrack_args"></jqx-input>
 
 						<div class="hint">tcptrack displays the status of TCP connections that it
@@ -960,7 +1083,17 @@
 				<tr>
 					<td style="width:180px;"><label for="bwmng">bwm-ng:</label></td>
 					<td>
-						{html_radios id="bwmng" name='bwmng' values=$yesno_ids output=$yesno_names selected=$ftmux->bwmng separator='<br />'}
+
+						<jqx-radio-button jqx-create="createWidget"
+							jqx-group-name="'bwmng'"
+							value="1"
+							ng-model="tmuxsettings.bwmng">Yes
+						</jqx-radio-button>
+						<jqx-radio-button jqx-create="createWidget"
+							jqx-group-name="'bwmng'"
+							value="0"
+							ng-model="tmuxsettings.bwmng">No
+						</jqx-radio-button>
 						<div class="hint">bwm-ng can be used to monitor the current bandwidth of all
 										  or some specific network
 										  interfaces or disks (or partitions). The pane for this can
@@ -971,7 +1104,17 @@
 				<tr>
 					<td style="width:180px;"><label for="mytop">mytop:</label></td>
 					<td>
-						{html_radios id="mytop" name='mytop' values=$yesno_ids output=$yesno_names selected=$ftmux->mytop separator='<br />'}
+
+						<jqx-radio-button jqx-create="createWidget"
+							jqx-group-name="'mytop'"
+							value="1"
+							ng-model="tmuxsettings.mytop">Yes
+						</jqx-radio-button>
+						<jqx-radio-button jqx-create="createWidget"
+							jqx-group-name="'mytop'"
+							value="0"
+							ng-model="tmuxsettings.mytop">No
+						</jqx-radio-button>
 						<div class="hint">mytop - display MySQL server performance info like `top'.
 							<br />You will need to create
 										  ~/.mytop, an example can be found in 'perldoc mytop'. The
@@ -984,7 +1127,16 @@
 					<td style="width:180px;"><label for="showprocesslist">Show Process List:</label>
 					</td>
 					<td>
-						{html_radios id="showprocesslist" name='showprocesslist' values=$yesno_ids output=$yesno_names selected=$ftmux->showprocesslist separator='<br />'}
+						<jqx-radio-button jqx-create="createWidget"
+							jqx-group-name="'showprocesslist'"
+							value="1"
+							ng-model="tmuxsettings.showprocesslist">Yes
+						</jqx-radio-button>
+						<jqx-radio-button jqx-create="createWidget"
+							jqx-group-name="'showprocesslist'"
+							value="0"
+							ng-model="tmuxsettings.showprocesslist">No
+						</jqx-radio-button>
 						<jqx-input jqx-create="createWidget" id="processupdate" name="processupdate" class="short" type="text"
 							ng-model="tmuxsettings.processupdate"></jqx-input>
 
@@ -1007,14 +1159,24 @@
 				<tr>
 					<td style="width:180px;"><label for="console">Console:</label></td>
 					<td>
-						{html_radios id="console" name='console' values=$yesno_ids output=$yesno_names selected=$ftmux->console separator='<br />'}
+
+						<jqx-radio-button jqx-create="createWidget"
+							jqx-group-name="'console'"
+							value="1"
+							ng-model="tmuxsettings.console">Yes
+						</jqx-radio-button>
+						<jqx-radio-button jqx-create="createWidget"
+							jqx-group-name="'console'"
+							value="0"
+							ng-model="tmuxsettings.console">No
+						</jqx-radio-button>
 						<div class="hint">Open an empty bash shell. The pane for this can not be
 										  created after tmux starts.
 						</div>
 					</td>
 				</tr>
 				<tr>
-					<td colspan="2" align="center"><jqx-button jqx-create="createWidget" jqx-on-click="onClick(event)" ng-model="buttonData" jqx-settings="buttonsettings"></jqx-button></td>
+					<td colspan="2" align="center"><jqx-button jqx-on-click="saveTmux(event)" jqx-data="buttonData" jqx-settings="buttonsettings"></jqx-button></td>
 				</tr>
 			</table>
 		</div>
@@ -1024,8 +1186,8 @@
 	<script type="text/javascript">
 
 		var url = "tmux-edit.php";
-		var adminTmux = angular.module("adminTmux", ["jqwidgets"]);
-		adminTmux.controller("tmuxController", function ($scope, $http) {
+
+		adminApp.controller("tmuxController", function ($scope, $http) {
 
 			$scope.createWidget = false;
 			$http.get(url + '?action=view').
@@ -1067,9 +1229,10 @@
 						autoDropDownHeight: true,
 						displayMember: "name",
 						valueMember: "id",
-						source: $scope.backfillGroups
+						source: $scope.backfillGroups,
+						selectedIndex: $scope.tmuxsettings.backfill_order - 1
 					};
-					$scope.selectedValue = $scope.tmuxsettings.backfill_order.toString;
+
 					$scope.buttonsettings = {
 						width: 150,
 						height: 30
@@ -1078,11 +1241,11 @@
 					$scope.buttonData = {
 						text: "Save"
 					};
-
-					$scope.onClick = function (event) {
+					$scope.saveDisabled = false;
+					$scope.saveTmux = function (event) {
 						$scope.buttonData.text = "Saved";
+						$scope.saveDisabled = true;
 					};
-					$scope.apply;
 					$scope.createWidget = true;
 
 				}).
