@@ -1,4 +1,5 @@
-<div id="adminMenu">
+<div ng-controller="menuController">
+	<jqx-menu jqx-settings="menuSettings">
 	<ul>
 		<li>Home</li>
 		<li><a href="{$smarty.const.WWW_TOP}/">Admin Home</a></li>
@@ -46,8 +47,9 @@
 		</li>
 		<li>Theme
 			<ul style="width: 180px;">
-			<div id="themelist"></div>
+			<jqx-drop-down-list jqx-settings="themeSettings" id="themelist" ng-controller="themeController"></jqx-drop-down-list>
 			</ul>
 		</li>
 	</ul>
+</jqx-menu>
 </div>

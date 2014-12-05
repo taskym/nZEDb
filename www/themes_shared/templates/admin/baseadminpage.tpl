@@ -10,14 +10,26 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<link rel="shortcut icon" href="{$smarty.const.WWW_TOP}/../themes_shared/images/favicon.ico">
 		<link rel="stylesheet" href="{$smarty.const.WWW_TOP}/../themes_shared/styles/layout/jqx.base.css" type="text/css" />
-		<script type="text/javascript" src="{$smarty.const.WWW_TOP}/../themes_shared/scripts/jquery-2.0.2.min.js"></script>
 		<script type="text/javascript" src="{$smarty.const.WWW_TOP}/../themes_shared/scripts/layout/angular.min.js"></script>
-		<script type="text/javascript" src="{$smarty.const.WWW_TOP}/../themes_shared/scripts/layout/themestyles.js"></script>
+		<script type="text/javascript" src="{$smarty.const.WWW_TOP}/../themes_shared/scripts/jquery-2.0.2.min.js"></script>
 		<script type="text/javascript" src="{$smarty.const.WWW_TOP}/../themes_shared/scripts/layout/jqxcore.js"></script>
-		<script type="text/javascript" src="{$smarty.const.WWW_TOP}/../themes_shared/scripts/layout/jqx-all.js"></script>
 		<script type="text/javascript" src="{$smarty.const.WWW_TOP}/../themes_shared/scripts/layout/jqxangular.js"></script>
 		<script type="text/javascript">
-			var adminApp = angular.module("adminApp", ["jqwidgets"]);
+			var adminApp = angular.module("adminApp", ["jqwidgets", "jqwidgets-amd"]);
+			adminApp.value('ajaxurl', 'tmux-edit.php');
+			adminApp.value('themeurl', '/admin/../themes_shared/styles/layout/jqx.');
+			adminApp.controller("themeController", function($scope){
+
+			});
+			adminApp.controller("menuController", function($scope){
+				$scope.menuSettings = {
+					showTopLevelArrows: true,
+					width: '100%',
+					height: '30px'
+				}
+			});
+			$("#adminMenu").css('visibility', 'visible');
+			$("#adminMenu").css('position', 'absolute');
 		</script>
 		{literal}
 			<style type="text/css">
@@ -61,21 +73,11 @@
 		<script type="text/javascript">
 			var WWW_TOP = {/literal}"{$smarty.const.WWW_TOP}"{literal} + "/..";
 			$(document).ready(function () {
-				initthemes("/admin/../themes_shared/styles/layout/jqx.");
-				$("#mainbody").attr('class', theme);
-				$("#adminMenu").jqxMenu({ theme: theme, showTopLevelArrows: true, width: '100%', height: '30px'});
-                $("#adminMenu").css('visibility', 'visible');
-				$("#adminMenu").css('position', 'absolute');
-				if (location.pathname == "/admin/site-edit.php" || location.pathname == "/admin/tmux-edit.php") {
-				$("#jumpbox").jqxDropDownList({selectedIndex: 0, theme: theme});
-				$("#jumpbox").jqxDropDownList('loadFromSelect', 'select');
-				$("#jumpbox").on('select').bind('change', function () {
-					$("html, body").animate({scrollTop: $('#' + $(this).val()).offset().top}, "slow");
-				});
-				$("#select").hide();
-				}
+
 			});
 		</script>
 		{/literal}
+
+		<script type="text/javascript" src="{$smarty.const.WWW_TOP}/../themes_shared/scripts/layout/themestyles.js"></script>
 	</body>
 </html>

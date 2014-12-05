@@ -1,104 +1,67 @@
-function initthemes(initialurl) {
-    if ($('#themelist').length == 0) {
-        return;
-    }
-    if (!$('#themelist').jqxDropDownList) {
-        return;
-    }
-    var loadedThemes = [
-        0, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-        -1
-    ];
-    var themes = [
-        { label: 'Arctic', group: 'Themes', value: 'arctic' },
-        { label: 'Web', group: 'Themes', value: 'web' },
-        { label: 'Bootstrap', group: 'Themes', value: 'bootstrap' },
-        { label: 'Metro', group: 'Themes', value: 'metro' },
-        { label: 'Metro Dark', group: 'Themes', value: 'metrodark' },
-        { label: 'Office', group: 'Themes', value: 'office' },
-        { label: 'Orange', group: 'Themes', value: 'orange' },
-        { label: 'Fresh', group: 'Themes', value: 'fresh' },
-        { label: 'Energy Blue', group: 'Themes', value: 'energyblue' },
-        { label: 'Dark Blue', group: 'Themes', value: 'darkblue' },
-        { label: 'Black', group: 'Themes', value: 'black' },
-        { label: 'Shiny Black', group: 'Themes', value: 'shinyblack' },
-        { label: 'Classic', group: 'Themes', value: 'classic' },
-        { label: 'Summer', group: 'Themes', value: 'summer' },
-        { label: 'High Contrast', group: 'Themes', value: 'highcontrast' },
-        { label: 'Lightness', group: 'UI Compatible', value: 'ui-lightness' },
-        { label: 'Darkness', group: 'UI Compatible', value: 'ui-darkness' },
-        { label: 'Smoothness', group: 'UI Compatible', value: 'ui-smoothness' },
-        { label: 'Start', group: 'UI Compatible', value: 'ui-start' },
-        { label: 'Redmond', group: 'UI Compatible', value: 'ui-redmond' },
-        { label: 'Sunny', group: 'UI Compatible', value: 'ui-sunny' },
-        { label: 'Overcast', group: 'UI Compatible', value: 'ui-overcast' },
-        { label: 'Le Frog', group: 'UI Compatible', value: 'ui-le-frog' }
-    ];
-    var me = this;
-    this.$head = $('head');
-    $('#themelist').jqxDropDownList({ source: themes, selectedIndex: 0, dropDownHeight: 200, height: '20px' });
-    var hasParam = window.location.toString().indexOf('#css=');
-    if (hasParam != -1) {
-        var theme = window.location.toString().substring(hasParam + 5);
-        $.data(document.body, 'theme', theme);
-        selectedTheme = theme;
-        var themeIndex = 0;
-        $.each(themes, function (index) {
-            if (this.value == theme) {
-                themeIndex = index;
+var theme = '';
+adminApp.controller('themeController', function ($scope, themeurl) {
+		$scope.themes = [
+				{ label: 'Arctic', group: 'Themes', value: 'arctic' },
+				{ label: 'Web', group: 'Themes', value: 'web' },
+				{ label: 'Bootstrap', group: 'Themes', value: 'bootstrap' },
+				{ label: 'Metro', group: 'Themes', value: 'metro' },
+				{ label: 'Metro Dark', group: 'Themes', value: 'metrodark' },
+				{ label: 'Office', group: 'Themes', value: 'office' },
+				{ label: 'Orange', group: 'Themes', value: 'orange' },
+				{ label: 'Fresh', group: 'Themes', value: 'fresh' },
+				{ label: 'Energy Blue', group: 'Themes', value: 'energyblue' },
+				{ label: 'Dark Blue', group: 'Themes', value: 'darkblue' },
+				{ label: 'Black', group: 'Themes', value: 'black' },
+				{ label: 'Shiny Black', group: 'Themes', value: 'shinyblack' },
+				{ label: 'Classic', group: 'Themes', value: 'classic' },
+				{ label: 'Summer', group: 'Themes', value: 'summer' },
+				{ label: 'High Contrast', group: 'Themes', value: 'highcontrast' },
+				{ label: 'Lightness', group: 'UI Compatible', value: 'ui-lightness' },
+				{ label: 'Darkness', group: 'UI Compatible', value: 'ui-darkness' },
+				{ label: 'Smoothness', group: 'UI Compatible', value: 'ui-smoothness' },
+				{ label: 'Start', group: 'UI Compatible', value: 'ui-start' },
+				{ label: 'Redmond', group: 'UI Compatible', value: 'ui-redmond' },
+				{ label: 'Sunny', group: 'UI Compatible', value: 'ui-sunny' },
+				{ label: 'Overcast', group: 'UI Compatible', value: 'ui-overcast' },
+				{ label: 'Le Frog', group: 'UI Compatible', value: 'ui-le-frog' }
+			];
+	$scope.themeSettings = {
+		source: $scope.themes,
+		selectedIndex: 0,
+		dropDownHeight: 200,
+		height: '20px'
+	}
+    $scope.hasParam = window.location.toString().indexOf('#css=');
+    if ($scope.hasParam != -1) {
+        $scope.theme = window.location.toString().substring($scope.hasParam + 5);
+        $.data(document.body, 'theme', $scope.theme);
+        $scope.selectedTheme = $scope.theme;
+       $scope.themeIndex = 0;
+        $.each($scope.themes, function (index) {
+            if (this.value == $scope.theme) {
+                $scope.themeIndex = index;
                 return false;
             }
         });
-        $('#themelist').jqxDropDownList({ theme: theme, selectedIndex: themeIndex, width: '175px'});
-        loadedThemes[0] = -1;
-        loadedThemes[themeIndex] = 0;
     }
     else {
-	    var theme = checkCookie();
-        $.data(document.body, 'theme', theme);
-        window.location = window.location.toString() + "#css=" + theme;
+	    $scope.theme = checkCookie();
+	    theme = $scope.theme;
+        $.data(document.body, 'theme', $scope.theme);
+        window.location = window.location.toString() + "#css=" + $scope.theme;
 	    location.reload();
     }
     $('#themelist').on('select', function (event) {
         setTimeout(function () {
-            var selectedIndex = event.args.index;
-            var selectedTheme = '';
-            var url = initialurl;
-            var loaded = loadedThemes[selectedIndex] != -1;
-            loadedThemes[selectedIndex] = selectedIndex;
-            var themes = [
-                { label: 'Arctic', group: 'Themes', value: 'arctic' },
-                { label: 'Web', group: 'Themes', value: 'web' },
-                { label: 'Bootstrap', group: 'Themes', value: 'bootstrap' },
-                { label: 'Metro', group: 'Themes', value: 'metro' },
-                { label: 'Metro Dark', group: 'Themes', value: 'metrodark' },
-                { label: 'Office', group: 'Themes', value: 'office' },
-                { label: 'Orange', group: 'Themes', value: 'orange' },
-                { label: 'Fresh', group: 'Themes', value: 'fresh' },
-                { label: 'Energy Blue', group: 'Themes', value: 'energyblue' },
-                { label: 'Dark Blue', group: 'Themes', value: 'darkblue' },
-                { label: 'Black', group: 'Themes', value: 'black' },
-                { label: 'Shiny Black', group: 'Themes', value: 'shinyblack' },
-                { label: 'Classic', group: 'Themes', value: 'classic' },
-                { label: 'Summer', group: 'Themes', value: 'summer' },
-                { label: 'High Contrast', group: 'Themes', value: 'highcontrast' },
-                { label: 'Lightness', group: 'UI Compatible', value: 'ui-lightness' },
-                { label: 'Darkness', group: 'UI Compatible', value: 'ui-darkness' },
-                { label: 'Smoothness', group: 'UI Compatible', value: 'ui-smoothness' },
-                { label: 'Start', group: 'UI Compatible', value: 'ui-start' },
-                { label: 'Redmond', group: 'UI Compatible', value: 'ui-redmond' },
-                { label: 'Sunny', group: 'UI Compatible', value: 'ui-sunny' },
-                { label: 'Overcast', group: 'UI Compatible', value: 'ui-overcast' },
-                { label: 'Le Frog', group: 'UI Compatible', value: 'ui-le-frog' }
-            ];
-            selectedTheme = themes[selectedIndex].value;
-	        setCookie("theme", selectedTheme, 365);
-             window.location.replace(window.location.protocol + "//" + window.location.host + window.location.pathname + "#css=" + selectedTheme);
+            $scope.selectedIndex = event.args.index;
+            $scope.selectedTheme = '';
+            $scope.selectedTheme = $scope.themes[$scope.selectedIndex].value;
+	        setCookie("theme", $scope.selectedTheme, 365);
+             window.location.replace(window.location.protocol + "//" + window.location.host + window.location.pathname + "#css=" + $scope.selectedTheme);
 	        window.location.reload();
         }, 5);
     });
-};
-
+});
 function setCookie(cname, cvalue, exdays) {
 	var d = new Date();
 	d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
