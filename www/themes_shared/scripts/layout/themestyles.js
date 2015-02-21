@@ -1,5 +1,6 @@
 var theme = '';
 adminApp.controller('themeController', function ($scope, themeurl) {
+		$scope.themeList = {};
 		$scope.themes = [
 				{ label: 'Arctic', group: 'Themes', value: 'arctic' },
 				{ label: 'Web', group: 'Themes', value: 'web' },

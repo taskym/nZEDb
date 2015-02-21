@@ -14,11 +14,7 @@ adminApp.factory('TmuxFactory', function ($http, ajaxurl) {
 		adminApp.controller("tmuxController", function ($scope, $http, TmuxFactory) {
 			$scope.createTmux = false;
 			TmuxFactory.getSettings().success(function (data) {
-				$scope.tmuxsettings = data;
-				/* Delete me */
-			$scope.jumpboxSelectValue = 10;
-			$('#navBar').jqxNavigationBar('expandAt', $scope.jumpboxSelectValue);
-			/* End Delete */
+			$scope.tmuxsettings = data;
 			$scope.jumpTo = function () {
 				$('#navBar').jqxNavigationBar('expandAt', $scope.jumpboxSelectValue);
 			}

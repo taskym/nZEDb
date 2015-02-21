@@ -47,7 +47,7 @@
 		</li>
 		<li>Theme
 			<ul style="width: 180px;">
-			<jqx-drop-down-list jqx-settings="themeSettings" id="themelist" ng-controller="themeController"></jqx-drop-down-list>
+			<jqx-drop-down-list jqx-instance="themeList" jqx-settings="themeSettings" id="themelist" ng-controller="themeController"></jqx-drop-down-list>
 			</ul>
 		</li>
 	</ul>
